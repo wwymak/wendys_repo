@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="Content-Script-Type" content="text/javascript; charset=utf-8">
+    <link href="../../../lib/css/bootstrap.css" type="text/css" rel="stylesheet"/>
+    <link href="../../../lib/css/style.css" type="text/css" rel="stylesheet"/>
+    <script src="../../../lib/javascripts/d3.v3.min.js"></script>
+    <!--<script src="../../../../lib/javascripts/angular.js"></script>
+    <script src="../../../../lib/app/controller.js"></script> -->
+    <script src="transportData.js" type="text/javascript"></script>
+    <style>
+      .axis path, .axis line {
+        fill: none;
+        stroke: black;
+        shape-rendering: crispEdges;
+      }
+
+      .axis text {
+        font-family: sans-serif;
+        font-size: 12px;
+      }
+      /*.axis path {
+        fill: none;
+        stroke: none;
+      }*/
+      .bar {
+        fill: steelblue;
+        stroke: white;
+      }
+
+      div {padding: 5px;
+      }
+ 
+    </style>
+  </head>
+<!--   <body ng-app="App" ng-controller="Controller"> -->
+  <body>
+    <div class="container">
+      <div class="row">
+        <div class="span12 page-header">
+          <h1>
+            Bar chart on transport data
+          </h1>
+        </div>
+      </div>
+      <!-- <div class="row">
+        <div class="span12 lead">
+          Chart shows new data every second using a transition (<em>animation</em>). No user interaction available.
+        </div>
+      </div> -->
+      <div class="row">
+      <!--   <div class="span6 offset3"> -->
+          <div class="span6 ">
+          <div id="figure"></div>
+        </div>
+      </div>
+      <div class="row">
+        <div class="span12">
+          <form>
+              <select id ="yearChosen" onchange= "updateYear()">
+
+                <option value=0>1970</option>
+                <option value=10>1980</option>
+                <option value=20>1990</option>
+                <option value=30>2000</option>
+                <option value=40>2010</option>
+              </select>
+          </form>
+        </div>
+      </div>
+      <!-- <div class="row">
+        <div class="span12">
+          <div ng-include src="'snippet.html'"></div>
+        </div>
+      </div> -->
+    </div>
+    <!--<script type="text/javascript" src="script_v2.js"></script> -->
+    <script type="text/javascript" src="transportpartb_v2b.js"></script>
+
+  </body>
+</html>
