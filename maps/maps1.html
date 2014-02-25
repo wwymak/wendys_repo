@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <link href="../bootstrap/css/bootstrap.css" type="text/css" rel="stylesheet"/>
+    <link rel="stylesheet" type="text/css" href="../css/dc.css"/>
+    <script src="../js/jquery-1.10.2.min.js" type="text/javascript"></script>
+    <script src="../bootstrap/js/bootstrap.min.js"></script> 
+    <script src="../d3.v3/d3.v3.min.js" charset="utf-8"></script>
+    <script src="../js/topojson.js" charset="utf-8"></script>
+    <script src="../js/queue.js" charset="utf-8"></script>
+   
+
+    <style>
+.ocean {
+  fill: #759dd1;
+}
+
+.river {
+  fill: none;
+  stroke: #759dd1;
+  stroke-width: 1;
+}
+
+.land {
+  fill: #ede9c9;
+  stroke: #79bcd3;
+  stroke-width: 2;
+}
+
+.boundary {
+  stroke: #7b5228;
+  stroke-width: 1;
+  fill: none;
+}
+
+.urban {
+  fill: #e1c0a3;
+}
+
+.airport {
+  fill: #9e56c7;
+  opacity: 0.6;
+  stroke: #69349d;
+}
+
+.route {
+  fill: none;
+  stroke: black;
+  stroke-width: 1;
+}
+</style>
+  </head>      
+    <body>
+
+	<div class="container">
+      <div class="row">
+        <div class="col-md-12 ">
+          <div id="graph">
+           </div>
+        </div>
+      </div>
+    </div>
+
+	<script>
+		var width = 900, 
+		    height = 800;
+		var svg = d3.select('#graph').append("svg")
+		            .attr("width", width).attr("height", height);
+
+		var projection = d3.geo.equirectangular().center([8,56]).scale(800);
+		
+		queue().defer(d3.json, 'water.json') 
+		       .defer(d3.json, 'cultural.json') 
+		       .defer(d3.json, 'land.json')
+		       .await(draw);
+
+		function add_to_map(collection, key){
+			return svg.append('g')
+        .selectAll('path')
+        .data(topojson.object(collection, 
+                              collection.objects[key]).geometries)
+        .enter()
+        .append('path')
+        .attr('d', d3.geo.path().projection(projection));
+		}
+		
+		function draw(err, water, land, cultural){
+			add_to_map(water, 'ne_50m_ocean').classed('ocean', true);
+			add_to_map(land, 'ne_50m_land')
+        .classed('land', true);
+
+    add_to_map(water, 'ne_50m_rivers_lake_centerlines')
+        .classed('river', true);
+
+    add_to_map(cultural, 'ne_50m_admin_0_boundary_lines_land')
+        .classed('boundary', true);
+
+    add_to_map(cultural, 'ne_10m_urban_areas')
+        .classed('urban', true);
+		}            
+	</script>
+
+	</body>
+</html>
