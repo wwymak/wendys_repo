@@ -36,6 +36,17 @@
             </select>
           </form>
         </div>
+        <div class="col-md-4">
+          <form>
+              <select id ="yearChosen">
+                <option value=0 selected>Choose year </option> 
+                <option value=1>2007</option>
+                <option value=2>2008</option>
+                <option value=3>2009</option>
+                
+              </select>
+          </form>
+        </div>
       </div>
     </div> 
     <div class="container">
@@ -47,6 +58,27 @@
     </div> 
 
     <script>
+
+      $(function(){
+        $("#yearChosen").change(function(){update();})
+      });
+
+      function update(){
+        var yearChoice = document.getElementById('yearChosen').value;
+        if (yearChoice == 1) {
+          drawChart(agr_2007, regions)
+        }
+        else if (yearChoice == 2) {
+          drawChart(agr_2008, regions)
+        }
+        else if (yearChoice == 3) {
+          drawChart(agr_2009, regions)
+        }
+        else{
+          return
+        }
+      }
+      
       var width = 960,
           height = 960;
       
@@ -70,35 +102,57 @@
 
       var colorScale = d3.scale.category10();
                           
+      var agr_2007 = [],
+      agr_2008 = [], 
+      agr_2009 = [];
 
+      var regions = ["North America", "Latin America", "Europe", "CIS", "Africa", "Middle East", "Asia"];
+      
       d3.text("world_exports.csv", "text/csv", function(data){
         var dataMatrixOverall = d3.csv.parseRows(data);
-        var regions = ["North America", "Latin America", "Europe", "CIS", "Africa", "Middle East", "Asia"];
         
-        var agr_2007 = [];
+        
+        // var agr_2007 = [],
+        // agr_2008 = [], 
+        // agr_2009 = [];
+
         for (var i = 5; i<dataMatrixOverall.length; i++){
-          temp = []
+          temp = [];
+          temp2 = [];
+          temp3 = [];
           if (dataMatrixOverall[i][0]==="Agricultural products"){
             //use j=1 start to remove all the references to world total            
             for (var j = 1; j<(dataMatrixOverall[i].length-1)/3; j++){ 
-              temp.push(+dataMatrixOverall[i][j*3+1])
+              temp.push(+dataMatrixOverall[i][j*3+1]);
+              temp2.push(+dataMatrixOverall[i][j*3+2]);
+              temp3.push(+dataMatrixOverall[i][j*3+3]);
             }
-            agr_2007.push(temp)
+            agr_2007.push(temp);
+            agr_2008.push(temp2);
+            agr_2009.push(temp3);
 
           }
         }
       
-// console.log(dataMatrixOverall);
-// console.log(agr_2007[0]);
+      drawChart(agr_2007);
 
-      chord.matrix(agr_2007);
+
+    });
+
+    function drawChart(data){
+      chord.matrix(data);
+      
+      svg.selectAll(".labels").remove();
 
       var chordChart =svg.selectAll("g.group")
-                          .data(chord.groups)
-                          .enter().append("svg:g")
-                          .attr("class", "group")
-                          .on("mouseover", fade(.02))
-                          .on("mouseout", fade(.80));
+                          .data(chord.groups);
+
+      chordChart.exit().remove();
+
+      chordChart.enter().append("svg:g")
+                .attr("class", "group")
+                .on("mouseover", fade(.02))
+                .on("mouseout", fade(.80));
                    
       
       chordChart.append("svg:path").attr("d", arc)
@@ -111,26 +165,26 @@
                           .data(chord.chords)
                           .enter().append("svg:path")
                           .attr("class", "chord") 
-                          .style("fill", function(d){return colorScale(d.target.index)})
+                          .style("fill", function(d){return colorScale(d.source.index)})
                           .style("stroke", function(d){return d3.rgb(colorScale(d.source.index)).darker()})
                           .attr("d", d3.svg.chord().radius(innerRadius)) 
      
 
       var labels = chordChart.append("svg:text")
+                      .attr("class", "labels")
                       .each(function(d) { d.angle = (d.startAngle + d.endAngle) / 2; })
                       .attr("x", 0)  
                       .attr("y", 0)
                       .attr("dy", ".35em")
                       .attr("text-anchor", function(d) { return d.angle > Math.PI ? "end" : null; })
                       .attr("transform", function(d) {
-                      return "rotate(" + (d.angle * 180 / Math.PI - 90) + ")"
-                      + "translate(" + (outerRadius +10) + ",0)"
-                      + (d.angle > Math.PI ? "rotate(180)" : "");
+                        return "rotate(" + (d.angle * 180 / Math.PI - 90) + ")"
+                        + "translate(" + (outerRadius +10) + ",0)"
+                        + (d.angle > Math.PI ? "rotate(180)" : "");
                       })
                       .text(function(d) { return regions[d.index]; });  
-
-    });
-
+      return chordChart;
+    }
     function fade(opacity){
       return function(d,i){
         // console.log(i);
