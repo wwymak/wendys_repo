@@ -3,6 +3,7 @@
   <head>
     <meta charset="utf-8">
     <title>Backbone.js -- TodoMVC test</title>
+    <link rel="stylesheet" href="assets/base.css">
     <!-- <link href="../css/bootstrap.min.css" type="text/css" rel="stylesheet"/> -->
     <script src="../js/jquery-1.10.2.min.js" type="text/javascript"></script>
     <script src="../js/bootstrap.min.js"></script>
@@ -20,6 +21,7 @@
   	   </header>
   	   <section id="main">
   	   	<input id="toggle-all" type="checkbox">
+        <label for="toggle-all">Mark all as complete</label>
   	   	<ul id="todoList"></ul>
   	   </section>
   	   <footer id="footer"></footer>
@@ -40,10 +42,10 @@
           <a class="selected" href="#/">All</a>
         </li>
         <li>
-          <a class="selected" href="#/">Active</a>
+          <a class="selected" href="#/active">Active</a>
         </li>
         <li>
-          <a class="selected" href="#/">Completed</a>
+          <a class="selected" href="#/completed">Completed</a>
         </li>
       </ul>
       <% if (completed) { %> <button id="clear-completed">Clear completed (<%= completed %>) </button> <%} %>
