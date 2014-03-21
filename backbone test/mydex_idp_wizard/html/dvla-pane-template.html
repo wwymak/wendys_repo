@@ -1,0 +1,74 @@
+<div class="dvla">
+  <h3>Connect to the Driver and Vehicle Licencing Agency (DVLA)</h3>
+
+  <% if(!completed) { %>
+
+    <% if(!verifying) { %>
+    <p>Enter your driving licence, and your full name, to retrieve your record from the DVLA.</p>
+    <p>If there is a match, the DVLA agency will return your full record and store it in your personal data store for you.</p>
+
+    <form id="dvla-login-form" accept-charset="UTF-8">
+      <label for="edit-dvla-number">Driving licence number<span class="form-required" title="This field is required.">*</span></label></label>
+      <input type="text" id="edit-dvla-number" name="driving_license" value="" size="15" maxlength="60" class="text">
+
+      <label for="edit-name">Name<span class="form-required" title="This field is required.">*</span></label>
+      <input type="text" id="edit-dvla-name" name="dvla_name" value="" size="15" maxlength="60" class="text">
+      <input name="verifying" type="hidden" id="verifying" value='true'>
+      <div class="actions">
+        <input type="submit" id="" name="op" value="Log in" class="form-submit submit">
+      </div>
+    </form>
+
+    <p><a class="cancel-pane" href="">I don't have a driving license.</a></p>
+
+    <% } %>
+
+    <% if(verifying) { %>
+
+      <h4>Verifying your identiy</h4>
+
+      <p>What is the expiry date of your current driving license?</p>
+
+
+      <p>If you have card-type driving license, this is listed as <em>"date of expiry (4b)"</em> on the front of your card.</p>
+
+      <form>
+
+        <p><input class="radio" type="radio" value="value1"/>1st October 2027</p>
+        <p><input class="radio" type="radio" value="value2"/>13th July 2017</p>
+        <p><input class="radio" type="radio" value="value3"/>22nd September 2021</p>
+
+        <input name="completed" type="hidden" id="completed" value='true'>
+
+      <div class="actions">
+        <input type="submit" id="" name="op" value="Submit" class="form-submit submit">
+      </div>
+
+      <p><a class="cancel unverify" href=''>I don't have this information, take me back.</a></p>
+
+    </form>
+
+    </div>
+
+
+    <% } %>
+
+  <% } %>
+
+  <% if (completed) { %>
+    <p><em>Your file with the DVLA</em></p>
+
+
+    <ul class="passport-details">
+      <li><span class="key">Given Names</span>    <span class="value">Joe</span></li>
+      <li><span class="key">Surname</span>        <span class="value">Bloggs</span></li>
+      <li><span class="key">Nationality</span>    <span class="value"><%= nationality %></span></li>
+      <li><span class="key">Date of Birth</span>  <span class="value"><%= date_of_birth%></span></li>
+      <li><span class="key">Place of Birth</span> <span class="value"><%= place_of_birth %></span></li>
+      <li><span class="key">Driving Licence</span><span class="value"><%= driving_license %></span></li>
+    </ul>
+
+    <p>A copy of this information is now stored in your personal data store.</p>
+
+  <% } %>
+  </div>

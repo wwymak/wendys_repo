@@ -1,0 +1,47 @@
+  <div class="ilv">
+  <h3>Connect to Facebook</h3>
+
+  <% if(!completed) { %>
+
+  <div class="facebook explanation">
+    <h4>Why do we ask for your Facebook information?</h4>
+    <p>Most people in the UK spend a lot of time online, especially on social networking sites like Facebook or Twitter. This kind of activity one of the best ways to prove who you are.</p>
+
+    <p>For example, most Facebook users spend thousands of hours developing their profile over many years, in a way that would be impossible to fake.</p>
+
+    <p>Combined with the safety checks and security measures Facebook has developed, this makes signing into your Facebook a better proof of your identity than showing your passport.</p>
+
+  </div>
+
+  <div class="facebook reassurance">
+    <h4>Connecting will not:</h4>
+
+    <ul>
+      <li>Post anything to your timeline</li>
+      <li>Share your Facebook information with anyone else</li>
+      <li>Store your personal information with anyone else</li>
+    </ul>
+  </div>
+
+
+  <a class="button-grey install" href="#" id="install-app">Connect to Facebook</a>
+
+    <script type="text/javascript">
+      jQuery(document).ready(function($) {
+        $('#install-app').ILV();
+      });
+    </script>
+
+  <p><a class="cancel-pane" href="#">I don't want to do this</a></p>
+
+  <% } %>
+
+  <% if (completed) { %>
+
+      <h4>Your account identity has been verified using Facebook.</h4>
+
+  <% } %>
+
+
+
+</div>

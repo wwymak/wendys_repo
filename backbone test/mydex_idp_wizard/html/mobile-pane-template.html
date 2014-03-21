@@ -1,0 +1,64 @@
+<div class="mobile-provider">
+ <% if(!completed) { %>
+
+  <h3>Connect your mobile provider </h3>
+
+  <h4>Do you have a monthly contract with your mobile provider?</h4>
+
+  <p>If you do, you can connect to your mobile provider, to fetch your personal record and save it to your personal data store.</p> </p>
+
+  <p>
+<p>Enter your mobile number to send an SMS message to your phone with a security code.
+</p>
+
+  <form id="mobile-provider-form" accept-charset="UTF-8">
+
+    <label for='mobile-number'>Mobile Number</label>
+    <input type='text' name='mobile_number' id='mobile-number' size='15' class="text" <% if (smsSent) { print("disabled=true value=" + mobile_number) } %>>
+    <input type='hidden' name='smsSent' id='sms-sent' value='true'>
+    <div class='actions'>
+      <a class="cancel resend-sms" href='#'>Resend SMS code.</a>
+      <input type='submit' class="submit" value='Send Code'>
+    </div>
+
+  </form>
+
+  <a href="#" class="cancel-pane">I don't have a mobile device on a contract with my provider</a>
+
+  <% if (smsSent) { %>
+
+    <form id="code-confirm-form" accept-charset="UTF-8">
+
+    <p>When your code arrives, enter the code sent to your phone here to make your connection.</p>
+
+      <label for='security-code'>Security Code</label>
+      <input name='security-code' type='text' id='security-code' size='15'>
+      <input name='completed' type='hidden' id='completed' value='true'>
+
+      <div class='actions'>
+        <input type='submit' value='Enter Code' class='submit <% if (!smsSent) { print("disabled") } %>' <% if (!smsSent) { print("disabled='true'") } %>>
+      </div>
+    </form>
+
+  <% } %>
+
+
+ <% } %>
+
+  <% if(completed) { %>
+    <p>Here's O2's record of your personal details.</p>
+
+    <ul class="connection-results">
+      <li><span class='key'>First Name</span><span class='value'>Joe</span></li>
+      <li><span class='key'>Last Name</span><span class='value'>Bloggs</li>
+      <li><span class='key'>Mobile number</span><span class='value'><%= mobile_number %></span></li>
+      <li><span class='key'>Account number</span><span class='value'><%= account_number %></span></li>
+      <li><span class='key'>Address (1st line)</span><span class='value'><%= address_first_line %></span></li>
+      <li><span class='key'>Address (2nd line)</span><span class='value'><%=address_second_line %></span>
+      <li><span class='key'>Town</span><span class='value'><%= town %></span></li>
+      <li><span class='key'>Postcode</span><span class='value'><%= postcode %></span></li>
+    </ul>
+
+    <p>This data is now stored in your personal data store for future reference.</p>
+  <% } %>
+</div>

@@ -1,0 +1,118 @@
+<?php
+
+/**
+ * @file mydex_idp_wizard.module
+ * Helps user to set up data to authenticate themselves and gain a level of assurance
+ */
+module_load_include('inc', 'mydex_idp_wizard', 'mydex_idp_wizard_utils');
+
+/**
+ * Implements hook_menu().
+ */
+function mydex_idp_wizard_menu() {
+
+  $items['idp_sign_up'] = array(
+    'title' => 'Mydex IDP Wizard',
+    'page callback' => 'mydex_idp_wizard_setup',
+    'page arguments' => array(1),
+    'access arguments' => array('access mydata pages'),
+  );
+  $items['idp_sign_in'] = array(
+    'title' => 'Mydex IDP Sign In',
+    'page callback' => 'mydex_idp_wizard_sign_in',
+    'access arguments' => array('access mydata pages'),
+  );
+  $items['idp_refer_to_gds'] = array(
+    'title' => 'Mydex IDP Wizard',
+    'page callback' => 'mydex_idp_wizard_refer_to_gds_idp',
+    'page arguments' => array(1),
+    'access arguments' => array('access mydata pages'),
+  );
+  return $items;
+}
+
+function mydex_idp_wizard_setup() {
+  // pull out values to store for later
+
+  if($_GET['postbackUrl']) {
+    mydex_idp_wizard_parse_saml_values($_GET['postbackUrl']);
+  }
+
+  mydex_idp_wizard_add_js();
+  mydex_idp_wizard_add_css();
+  return theme('idp_wizard_page');
+}
+
+/**
+ * Build url for signing into a relying party
+ * via Mydex's IDP services
+ *
+ **/
+function mydex_idp_wizard_sign_in() {
+
+  global $user;
+  global $conf;
+
+  // build url
+  $idp_server = $conf['mydex_idp_wizard_idp_handoff_url'];
+  $path       = 'simplesaml/module.php/mydex/resume.php?auth=';
+  $auth       = $_GET['auth'];
+
+  // combine for readability
+  $idp_sign_in_url = $idp_server . $path . $auth;
+
+  // redirect user
+  drupal_goto($idp_sign_in_url);
+}
+/**
+ * mydex_idp_wizard_refer_to_gds_idp
+ *
+ * The GDS user journey relies on a user being logged out the existing IDP website,
+ * before they are bounced back to the GDS sign in page
+ **/
+function mydex_idp_wizard_refer_to_gds_idp()
+{
+  global $user;
+
+  watchdog('user', 'Session closed for %name.', array('%name' => $user->name));
+
+  $postback_url = cache_get("{$user->uid}:postback_url", 'cache_mydex_pds')->data;
+  $request_id = cache_get("{$user->uid}:request_id", 'cache_mydex_pds')->data;
+
+  $gds_return_url = $postback_url . "?requestId=" . $request_id;
+
+  watchdog('gds_return_url', "gds_return_url is %gds_return_url", array('%gds_return_url' => $gds_return_url));
+
+  // Destroy the current session, so when the user comes back they need to sign in
+  session_destroy();
+
+  drupal_goto($gds_return_url);
+
+}
+
+function mydex_idp_wizard_theme()
+{
+  return array(
+  'idp_wizard_page' => array(
+    'template'  =>'wizard.page'
+    )
+  );
+}
+
+function mydex_idp_wizard_parse_saml_values($saml_values = null)
+{
+  global $user;
+
+  // split params split
+  $full_url = explode('?', $saml_values);
+  $postback_url = $full_url[0];
+  watchdog('postback_url', "postback_url is %postback_url", array('%postback_url' => $postback_url));
+
+  $request_id = explode('=', $full_url[1]);
+  $request_id_val = $request_id[1];
+  watchdog('request_id', "request_id is %request_id", array('%request_id' => $request_id_val));
+
+  // store the value in the cache, to fetch later
+  cache_set("{$user->uid}:request_id", $request_id_val, 'cache_mydex_pds');
+  cache_set("{$user->uid}:postback_url", $postback_url, 'cache_mydex_pds');
+}

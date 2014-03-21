@@ -1,0 +1,374 @@
+/* Connection Wizard */
+ .connection-wizard {
+    width:40em;
+    padding-left: 40px;
+    padding-top: 20px;
+    clear:both;
+}
+/* Introduction page */
+ .connection-wizard .intro h1 {
+    font-size:1.5em;
+}
+.connection-wizard .intro p {
+    font-size:1.2em;
+}
+.connection-wizard .intro h2, .connection-wizard .step1 h2, .connection-wizard .step2 h2, .connection-wizard .step3 h2 {
+    font-weight: bold;
+}
+.connection-wizard .intro ol li {
+    font-size: 1.2em;
+    margin-left:40px;
+    margin-top:1em;
+    font-style: italic;
+    font-weight: bold;
+}
+/* IDP Wizard Steps */
+ .idp-wizard-steps {
+    margin-left:50px;
+    margin-bottom:0px;
+    padding-top:1em;
+    border-top: 1px solid #ddd;
+    width: 600px;
+    list-style: none;
+    display:inline-block;
+}
+
+.idp-wizard-steps li {
+    float:left;
+    width:200px;
+}
+/* need to add #id to override global.css */
+ #page .idp-wizard-steps li.current p, #page .idp-wizard-steps li.current span.count {
+    color:#333;
+}
+.idp-wizard-steps li span.count {
+    float: left;
+    font-size:2em;
+    font-style: italic;
+    margin-right:0.25em;
+}
+.idp-wizard-steps li p {
+    float: left;
+    margin-top:0.2em;
+    padding-left:6px;
+    font-size:1.5em;
+    font-style:italic;
+    width:150px
+}
+#page .idp-wizard-steps li p, #page .idp-wizard-steps li span.count {
+    color: #aaa;
+}
+/* Initial start */
+ .connection-wizard .step1 div.connection-prompt {
+    width: 220px;
+    margin-left: 25px;
+    background-image: url(../img/connection-prompt-arrow.png);
+    background-repeat: no-repeat;
+    background-position: 00px 65px;
+    min-height: 200px;
+    padding-left: 120px;
+    padding-top: 35px;
+}
+.connection-wizard .step1 div.connection-prompt h2{
+    font-weight: normal;
+}
+/* */
+ .connection-wizard .step1 {
+    width: 700px;
+}
+.link_to_idp_connection {
+    /*width:   500px;*/
+    padding: 12px 12px 36px 12px;
+    margin-top:  16px;
+    clear: left;
+    background-color:#ddd;
+}
+ul#connection-list {
+    margin: 10px;
+    list-style: none;
+    width: 200px;
+    display:inline-block;
+    vertical-align: top;
+}
+ul#connection-list li div {
+    border-right:1px solid #eee;
+    border-top:1px solid #fff;
+    background: #eee;
+    min-height:30px;
+    padding:12px;
+}
+ul#connection-list li.active div {
+    background: #ddd;
+}
+ul#connection-list li div a {
+    text-decoration: none;
+}
+ul#connection-list li div a:hover {
+    text-decoration: underline;
+}
+ul#connection-list li div.connected a {
+    color: green;
+    text-decoration: none;
+}
+ul#connection-list li div i.icon-ok {
+    color: green;
+}
+.activity-pane {
+    margin: 10px;
+    width: 450px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    min-height: 400px;
+    display: inline-block;
+    padding-top:12px;
+}
+.activity-pane h3 {
+    padding:12px 0 0 24px;
+    font-size: 20px;
+    font-weight: bold;
+}
+.activity-pane p {
+    font-size:15px;
+    padding: 0 0 0 24px;
+}
+
+.activity-pane li {
+    font-size:15px;
+}
+.activity-pane label {
+    padding: 0 0 0 24px;
+}
+.activity-pane input.text {
+    border-radius:15px;
+    width:190px;
+}
+.connection-wizard .activity-pane input.submit {
+    display: inline-block;
+    line-height: 1em;
+}
+.activity-pane .actions {
+    margin-top:12px;
+    clear:left;
+    padding: 0 0 0 24px;
+}
+.activity-pane .cancel {
+    display:block;
+    float:left;
+    font-style: italic;
+    /*font-size: 12px;*/
+    width:200px;
+    margin-top:8px;
+}
+
+.activity-pane a.cancel,
+.activity-pane p a.cancel,
+.activity-pane a.cancel-pane,
+.activity-pane p a.cancel-pane
+{
+ font-size:13px;
+ font-style: italic;
+}
+
+.activity-pane .mobile-provider a.cancel-pane,
+.activity-pane .mobile-provider p a.cancel{
+    margin-left:30px;
+}
+
+ul.passport-details, ul.connection-results {
+    margin-bottom:12px;
+    margin-top:12px;
+    margin-left:30px;
+}
+.passport-details li, .connection-results li {
+    list-style: none;
+    margin:6px;
+}
+.passport-details li .key, .connection-results li .key {
+    clear:left;
+    width:150px;
+    display:inline-block;
+    font-weight:bold;
+}
+.passport-details li .value, .connection-results li .value {
+    display:inline-block;
+}
+.activity-pane p {
+    margin-top:12px;
+    clear:both;
+}
+#page input.text {
+    padding-left: 1em;
+    margin-top:6px;
+    margin-bottom:6px;
+}
+/* override for connection form */
+#page input.disabled {
+    color:#bbb;
+}
+
+/* mobile pane styles */
+
+.mobile-provider h4{
+    margin-left:24px;
+}
+.mobile-provider p{
+    width:400px;
+}
+
+.mobile-provider .cancel-pane{
+    margin-top:24px;
+    display:inline-block;
+}
+
+body form#code-confirm-form {
+    margin-top:24px;
+    padding: 12px;
+    background-color: #ddd;
+}
+.activity-pane form#code-confirm-form p {
+    margin-top:12px;
+}
+
+.ilv h4,
+.dvla h4,
+.hm-passport-office h4,
+.bank h4{
+    margin-left:24px;
+}
+
+.bank p,
+.dvla p,
+.hm-passport-office p,
+.utility p
+{
+    width: 400px;
+}
+
+.dvla input.radio,
+.hm-passport-office input.radio{
+    margin-right:18px;
+}
+
+.dvla a.cancel-pane,
+.hm-passport-office a.cancel-pane{
+    margin-left:0px;
+}
+
+.dvla a.cancel,
+.hm-passport-office .verify a.cancel{
+    width:auto;
+    margin-bottom:24px;
+}
+
+/* DVLA */
+
+.dvla {
+    padding-bottom: 12px;
+}
+
+
+/* ILV - Facebook */
+ .ilv .button {
+    margin-left: 30px;
+}
+/* override */
+.ui-dialog .ui-widget-content{
+     background-color:#FFF;
+}
+
+.facebook.explanation {
+    background-color: #efefef;
+    padding:12px 12px 12px 24px;
+    border-radius: 4px;
+    margin:18px;
+}
+
+.facebook.explanation p {
+    margin-left:px;
+    padding-left:0px;
+    padding-right:12px;
+}
+
+.facebook.reassurance {
+    margin-left:24px;
+}
+
+.facebook.reassurance ul{
+    padding-top:12px;
+    margin-left:18px;
+}
+
+.ilv a#install-app {
+    margin-left:18px;
+    width:150px;
+}
+
+.ilv a.cancel-pane{
+    margin: 18px 18px 18px 0px;
+    display:inline-block;
+}
+
+/* Step 3 styles */
+ .connection-wizard .step3 p {
+    font-size:1.2em;
+    width:40em;
+}
+.connection-wizard .step3 h2 {
+    font-weight: bold;
+}
+.connection-wizard .step3 a.idp-handoff {
+    font-style: italic;
+}
+
+/* Identity Strength Progress Bar */
+ .connection-wizard .identity-strength-widget {
+    background-color: #eee;
+    border-radius: 5px;
+    padding: 12px;
+    width: 475px;
+    margin-left:8em;
+    position:relative;
+}
+.ui-widget-content {
+    background-color:#888;
+}
+.connection-wizard .identity-strength-widget h2 {
+    display:inline-block;
+    width:200px;
+    margin-left:30px;
+    margin-top:10px;
+}
+.connection-wizard .identity-strength-widget p {
+    margin-bottom:6px;
+
+}
+#progressbar {
+    width: 200px;
+    height: 25px;
+    position:absolute;
+    top:22px;
+    left: 240px;
+    border-radius: 4px;
+    display:inline-block;
+    background-color:#fff;
+    border:1px solid #999;
+    /*border: 1px solid red;*/
+    /*background-color:red;*/
+}
+#progressbar .progress {
+    /*width:  70%;*/
+    height: 100%;
+    background-color: #54A457;
+    border-bottom-left-radius: 2px;
+    border-top-left-radius: 2px;
+}
+
+
+
+/* Step 3 */
+/* Add a couple of overrides for width here */
+
+#page .connection-wizard .step3 a.button {
+    width: 170px;
+}
+

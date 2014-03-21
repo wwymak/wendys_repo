@@ -1,0 +1,4 @@
+name = Mydex IDP Wizard
+description = A module to let users authenticate themselves, gaining a level of assurance for the government
+core = 7.x
+package = Mydex

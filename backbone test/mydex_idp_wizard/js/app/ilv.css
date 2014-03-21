@@ -1,0 +1,47 @@
+h3.confidence{
+  font-size:3.5em;
+  margin:0.5em;
+}
+
+.score_location {
+  border-top: 1px solid #ccc;
+}
+
+.score_location a {
+  font-size:0.8em;
+  color:blue;
+}
+.score_location p{
+  font-size:0.9em;
+}
+
+.confidence_explanation {
+  font-size:0.9em;
+  line-height: 1.4em;
+  width: 20em;
+  position:absolute;
+  top: 75px;
+  left: 200px;
+}
+
+.need_to_do, .what_you_get{
+  width: 300px;
+  font-size: 0.9em;
+  position: absolute;
+  top: 75px;
+  left: 25px;
+}
+
+.what_you_get {
+  border-left: 1px solid #ccc;
+  left: 320px;
+  padding-left: 30px;
+}
+
+.please_wait {
+  width: 250px;
+  line-height: 1.5em;
+  position: absolute;
+  top:75px;
+  left:350px;
+}
