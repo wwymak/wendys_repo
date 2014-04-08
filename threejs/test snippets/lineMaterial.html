@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<script src="../../js/jquery-1.10.2.min.js" type="text/javascript"></script>
+		<script src="../../js/three.js" type="text/javascript"></script>
+		<script src="../../js/THREEx.WindowResize.js" type="text/javascript"></script>
+		<script src="../../js/dat.gui.js" type="text/javascript"></script>
+
+		<style type="text/css">
+			body{
+				margin: 0;
+				overflow: hidden;
+				background-color: #bbbbbb;
+			}
+
+		/*	div{
+				background-color: #bbbbbb;
+			}*/
+		</style>
+	</head>
+	<body>
+	    <div id="WEBGL-graphic"></div>
+		<script type="text/javascript">
+		var camera, renderer, scene;
+
+		var scene = new THREE.Scene();
+
+		renderer = new THREE.WebGLRenderer();
+		renderer = new THREE.WebGLRenderer({antialias: true});
+		renderer.setSize( window.innerWidth, window.innerHeight );
+		renderer.setClearColor(0xEEEEEE);
+		renderer.shadowMapEnabled = true;
+		$("#WEBGL-graphic").append(renderer.domElement);
+
+		camera = new THREE.PerspectiveCamera( 75, window.innerWidth/window.innerHeight, 1, 1000);
+		camera.position.x = 0;
+		camera.position.y = -30;
+		camera.position.z = 50;
+		camera.lookAt(scene.position);
+
+		var winResize = new THREEx.WindowResize( renderer, camera); 
+        
+        var ambientLight = new THREE.AmbientLight( 0xcccc00 );
+        scene.add(ambientLight);
+
+
+        var lineMaterial = new THREE.LineBasicMaterial( {linewidth: 1, color: 0x7a4298} );
+        var lineGeometry = new THREE.Geometry();
+
+        var points = dragon(15, 100);
+        // console.log(points);
+        // var points = [{x:0, y:0, z:0}, {x: 10, y: 10, z: 0}, {x: 20, y: 0, z:0}];
+        points.forEach(function(item){lineGeometry.vertices.push(new THREE.Vector3( item.x, item.y, item.z ))});
+
+        var line = new THREE.Line( lineGeometry, lineMaterial);
+		line.position.set(0, 0, -60);
+        scene.add(line);
+// var step = 0;
+        render();
+
+    function render() {
+        // stats.update();
+        // line.rotation.z = step += 0.01;
+
+        requestAnimationFrame(render);
+        renderer.render(scene, camera);
+    }
+
+    // var pen = [0,0,0];
+
+    
+
+    function gosper(level, pathLen){
+    	var pen = [0,0,0]; //pen[0] = x coord, pen[1] = y coord pen[2] = degrees to turn
+    	var points = [];
+
+    	right_gosper(level, pathLen, pen);
+
+    	return points;
+
+    	function left_turn(degrees){
+	        pen[2] -= degrees * Math.PI /180;
+    	}
+
+    	function right_turn(degrees){
+			pen[2] += degrees * Math.PI /180; 
+    	}
+
+    	function straightOn(dist){
+    		points.push({x:pen[0], y:pen[1], z:0});
+
+    		pen[0] += Math.cos(pen[2]) * dist;
+    		pen[1] += Math.sin(pen[2]) * dist;
+
+    		points.push({x:pen[0], y:pen[1], z:0});
+
+    	}
+
+    	function right_gosper(level, len, pen){
+
+    		level = level-1;
+    		if (level >0){
+    			len = len / 2.6457;
+    			right_gosper(level, len, pen );
+    			right_turn(60);
+    			left_gosper(level, len, pen);
+    			right_turn(120);
+    			left_gosper(level, len, pen);
+    			left_turn(60);
+    			right_gosper(level, len, pen);
+    			left_turn(120);
+    			right_gosper(level, len, pen);
+    			right_gosper(level, len, pen);
+    			left_turn(60);
+    			left_gosper(level, len, pen);
+    			right_turn(60);
+
+
+// rg :st :ln rt 60 gl :st :ln  rt 120 gl :st :ln lt 60 rg :st :ln lt 120 rg :st :ln rg :st :ln lt 60 gl :st :ln rt 60
+    		}
+    		if(level ==0){
+    			console.log("rg level0")
+                straightOn(len);
+                right_turn(60);
+                straightOn(len);
+                right_turn(120);
+                straightOn(len);
+                left_turn(60);
+                straightOn(len);
+                left_turn(120);
+                straightOn(len);
+                straightOn(len);
+                left_turn(60);
+                straightOn(len);
+                right_turn(60);
+    		}
+    		// fd :ln rt 60 fd :ln rt 120 fd :ln lt 60 fd :ln lt 120 fd :ln fd :ln lt 60 fd :ln rt 60
+    	}
+
+    	function left_gosper(level, len, pen){
+	    	level = level-1;
+    		if (level >0){
+    			len = len / 2.6457;
+    			left_turn(60);
+    			right_gosper(level, len, pen);
+    			right_turn(60);
+    			left_gosper(level, len, pen);
+    			left_gosper(level, len, pen);
+    			right_turn(120);
+    			left_gosper(level, len, pen);
+    			right_turn(60);
+    			right_gosper(level, len, pen);
+    			left_turn(120);
+    			right_gosper(level, len, pen);
+    			left_turn(60);
+    			left_gosper(level, len, pen);
+//lt 60 rg :st :ln rt 60 gl :st :ln gl :st :ln rt 120 gl :st :ln rt 60 rg :st :ln lt 120 rg :st :ln lt 60 gl :st :ln
+    		}
+    		if (level ==0){
+    			left_turn(60);
+    			straightOn(len);
+    			right_turn(60);
+    			straightOn(len);
+    			straightOn(len);
+    			right_turn(120);
+    			straightOn(len);
+    			right_turn(60);
+    			straightOn(len);
+    			left_turn(120);
+    			straightOn(len);
+    			left_turn(60);
+    			straightOn(len);
+    		}
+            // lt 60 fd :ln rt 60 fd :ln fd :ln rt 120 fd :ln rt 60 fd :ln lt 120 fd :ln lt 60 fd :ln
+	    }
+
+    }
+
+    function dragon(level, pathLen){
+    	var pen = [0,0,0]; //pen[0] = x coord, pen[1] = y coord pen[2] = degrees to turn
+    	var points = [];
+
+    	rightDragon(level, pathLen, pen);
+
+    	return points;
+
+    	function left_turn(degrees){
+	        pen[2] -= degrees * Math.PI /180;
+    	}
+
+	function right_turn(degrees){
+		pen[2] += degrees * Math.PI /180; 
+	}
+
+	function straightOn(dist){
+		points.push({x:pen[0], y:pen[1], z:0});
+
+		pen[0] += Math.cos(pen[2]) * dist;
+		pen[1] += Math.sin(pen[2]) * dist;
+
+		points.push({x:pen[0], y:pen[1], z:0});
+
+	}
+
+    	function rightDragon(step, length, pen){
+    		step = step -1;
+    		
+    		if (step > 0){
+    			length = length /Math.sqrt(2);
+    			right_turn(45);
+    			rightDragon(step, length, pen);
+    			left_turn(90);
+    			leftDragon(step, length, pen);
+    			right_turn(45);
+
+
+    		}
+    		if (step == 0){
+    			right_turn(45);
+    			straightOn(length);
+    			left_turn(90);
+    			straightOn(length);
+    			right_turn(45);
+    		}
+    	}
+
+    	function leftDragon(step, length, pen){
+    		step = step -1;
+    		
+    		if (step > 0){
+    			length = length /Math.sqrt(2);
+    			left_turn(45);
+    			rightDragon(step, length, pen);
+    			right_turn(90);
+    			leftDragon(step, length, pen);
+    			left_turn(45);
+    		}
+    		if (step == 0){
+    			left_turn(45);
+    			straightOn(length);
+    			right_turn(90);
+    			straightOn(length);
+    			left_turn(45);
+    		}
+    	}
+
+
+    }
+
+// to dcr :step :length
+//   make "step :step - 1
+//   make "length :length / 1.41421
+//   if :step > 0 [rt 45 dcr :step :length lt 90 dcl :step :length rt 45]
+//   if :step = 0 [rt 45 fd :length lt 90 fd :length rt 45]
+// end
+ 
+// to dcl :step :length
+//   make "step :step - 1
+//   make "length :length / 1.41421
+//   if :step > 0 [lt 45 dcr :step :length rt 90 dcl :step :length lt 45]
+//   if :step = 0 [lt 45 fd :length rt 90 fd :length lt 45]
+// end
+	    
+
+
+
+		</script>
+	</body>
+</html>
