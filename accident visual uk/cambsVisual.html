@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <link href="../css/bootstrap.min.css" type="text/css" rel="stylesheet"/>
+    <link rel="stylesheet" type="text/css" href="../css/dc.css"/>
+    <script src="../js/jquery-1.10.2.min.js" type="text/javascript"></script>
+    <script src="../js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCAI78RB-u_WmtWhAzQZx7DV70A7ew55qo&sensor=false"></script>
+    <script src="../js/d3.js" charset="utf-8"></script>
+    <script src="../js/topojson.js" charset="utf-8"></script>
+    <script src="cambridgeshire_mapInfo.js" charset="utf-8"></script>
+    <style>
+      /*  .subunit.SCT { fill: #ddc; }
+        .subunit.WLS { fill: #cdd; }
+        .subunit.NIR { fill: #cdc; }
+        .subunit.ENG { fill: #dcd; }
+        .subunit.IRL { display: none; }*/
+
+        .subunit-boundary {
+          fill: none;
+          stroke: #777;
+          stroke-dasharray: 2,2;
+          stroke-linejoin: round;
+        }
+
+        .road {
+          fill: none;
+          stroke: green;
+          stroke-width: 0.5;
+
+        }
+
+        div.tooltip {                   /* set the CSS for tooltip divs */
+          position: absolute;         /* reference for measurement */
+          text-align: center;         /* align the text to the center */
+          width: 400px;                    /* set the width of the rectangle */
+          height: 400px;                   /* set the height of the   rectangle */
+          padding: 2px;                   /* set a border around the rectangle */
+          font: 12px sans-serif;      /* set the font type for the tooltips */
+          background: lightsteelblue; /* set the colour of the rectangle */
+          border: 0px;                    /* turn off the border (0px) */
+          border-radius: 8px;         /* set how rounded the edges of the rectangle is */
+          pointer-events: none;           /* 'none' tells the mouse to ignore the rectangle */
+      }
+/*
+        .subunit-boundary.IRL {
+          stroke: #aaa;
+        }
+*/
+    </style>
+  </head>
+  
+  <body>
+    <div class="container">
+      <div class="row">
+        <div class="col-md-12 ">
+          <div id="map"></div>
+        </div>
+      </div>
+    </div> 
+      <script type="text/javascript">
+
+      
+
+
+   function findAddress(latitude, longitude){
+    var geocoder = new google.maps.Geocoder();
+      var latlng = new google.maps.LatLng(latitude, longitude);
+   geocoder.geocode({'latLng': latlng}, function(results, status) {
+      if (status == google.maps.GeocoderStatus.OK) {
+        if (results[1]) {
+          var location = results[0].formatted_address;
+          console.log(location);
+        }
+      } else {
+        console.log("Geocoder failed due to: " + status);
+      }
+    });
+ }
+
+        var width = 950, height = 950;
+        var tooltip = d3.select("#map").append("div")   // declare the properties for the div used for the tooltips
+                        .attr("class", "tooltip")               // apply the 'tooltip' class
+                        .style("opacity", 0);
+        var svg = d3.select("#map").append("svg").attr("width", width).attr("height", height);
+        // var colorScale = d3.scale.category20c();
+        var colorScale = d3.scale.ordinal()
+                            .range(["#ffffe5","#ffffcc","#fff7bc","#ffeda0","#fee391","#fed976","#fec44f","#feb24c","#fe9929","#fd8d3c","#ec7014","#fc4e2a","#cc4c02","#e31a1c","#993404","#bd0026","#662506","#800026"]);   
+       var projection = d3.geo.albers().center([2.5,53.3]).rotate([4.4,0]).parallels([50,60]).scale(35000).translate([-100,-100]);
+            var path = d3.geo.path().projection(projection);  
+        
+        var g = svg.append("g");
+        // var g2= svg.append("g");
+
+        //     g2.selectAll("path2")
+        //      .data(cambsTest)
+        //      // .data(cambridgeshire)
+        //      .enter()
+        //      .append("path")
+        //      .attr("d", path).attr("class", "subunit-boundary")
+
+        //     g.selectAll("path")
+        //      .data(cambridgeshire)
+        //      .enter()
+        //      .append("path")
+        //      .attr("d", path).attr("class", "subunit-boundary")
+
+        // var zoom = d3.behavior.zoom()
+        //             .on("zoom",function() {
+        //               g.attr("transform","translate("+ 
+        //                   d3.event.translate.join(",")+")scale("+d3.event.scale+")");
+        //               g.selectAll("path")  
+        //                   .attr("d", path.projection(projection)); 
+        //             });
+
+        // svg.call(zoom);
+
+        d3.json("districts_cambs.json", function(error, data) {
+
+          g.append("g").selectAll("path")
+           .data(data.features)
+           .enter()
+           .append("path")
+           .attr("d", path).attr("class", "subunit-boundary")
+
+           // console.log(data.features[1].geometry.coordinates[0][0][0])
+
+           var longitude=[];
+           data.features.forEach(function(item){
+            item.geometry.coordinates[0].forEach(function(coord){
+              longitude.push(coord[0])
+            })
+           })
+
+           var latitude=[];
+           data.features.forEach(function(item){
+            item.geometry.coordinates[0].forEach(function(coord){
+              latitude.push(coord[1])
+            })
+           })
+
+           console.log(d3.max(longitude), d3.max(latitude), d3.min(longitude), d3.min(latitude))
+
+           var zoom = d3.behavior.zoom()
+                    .on("zoom",function() {
+                      g.attr("transform","translate("+ 
+                          d3.event.translate.join(",")+")scale("+d3.event.scale+")");
+                      g.selectAll("path")  
+                          .attr("d", path.projection(projection)); 
+                    });
+                    svg.call(zoom);
+
+          d3.json("a_road_polyline_cambs2.json", function(error, data){
+            g.append("g").selectAll("pathRoad")
+             .data(data.features)
+             .enter()
+             .append("path")
+             .attr("d", path).attr("class", "road")
+          })
+
+        });
+
+        d3.csv("cambridgeshireAccident2012.csv", function(data){
+          return {
+          id: +data.Accident_Index,
+          longitude: +data.Longitude,
+          latitude: +data.Latitude,
+          severity:+data.Accident_Severity, //1= fatal, 2= serious 3 = slight
+          imageurl: "http://maps.googleapis.com/maps/api/streetview?size=400x400&location=" + data.Latitude + "," + data.Longitude +"&sensor=false&key=AIzaSyCAI78RB-u_WmtWhAzQZx7DV70A7ew55qo"
+          };
+          }, function(error, rows) {
+            console.log(rows);
+          var datapoints = g.append("g").selectAll(".pin")
+                            .data(rows)
+                            .enter().append("circle", ".pin")
+                            .attr("r", function(d){return 1.5/d.severity})
+                            .attr("transform", function(d) {
+                              return "translate(" + projection([
+                                d.longitude,
+                                d.latitude
+                              ]) + ")"
+                            });
+          datapoints.on("mouseover", function(d){
+          tooltip.transition()                                    
+            .duration(200)                                  
+            .style("opacity", .9); 
+            tooltip.style("background-image", "url("+ d.imageurl + ")" );
+            findAddress(d.latitude, d.longitude);
+          })
+          .on("mouseout", function(d) {                           
+            tooltip.transition()                                    
+            .duration(500)                                 
+            .style("opacity", 0);                          
+          });
+
+      });
+
+        
+
+
+
+        //   var temp = {}
+        //   temp.long = _data.Longitude;
+        //   temp.lat = _data.Latitude
+        //Accident_Index  Location_Easting_OSGR Location_Northing_OSGR  Longitude Latitude  Police_Force  Accident_Severity Number_of_Vehicles  Number_of_Casualties  Date  Day_of_Week Time  Local_Authority_(District)  Local_Authority_(Highway) 1st_Road_Class  1st_Road_Number Road_Type Speed_limit Junction_Detail Junction_Control  2nd_Road_Class  2nd_Road_Number Pedestrian_Crossing-Human_Control Pedestrian_Crossing-Physical_Facilities Light_Conditions  Weather_Conditions  Road_Surface_Conditions Special_Conditions_at_Site  Carriageway_Hazards Urban_or_Rural_Area Did_Police_Officer_Attend_Scene_of_Accident LSOA_of_Accident_Location
+       
+
+      //http://maps.googleapis.com/maps/api/streetview?size=400x400&location=-0.24981179021462, 52.18436062375163&sensor=false&key=AIzaSyCAI78RB-u_WmtWhAzQZx7DV70A7ew55qo 
+
+//imageurl = "http://maps.googleapis.com/maps/api/streetview?size=400x400&location=" + data.Latitude + "," + data.Longitude +"&sensor=false&key=AIzaSyCAI78RB-u_WmtWhAzQZx7DV70A7ew55qo"
+
+//http://maps.googleapis.com/maps/api/geocode/json?latlng=52.18436062375163,-0.24981179021462&sensor=false&key=AIzaSyCAI78RB-u_WmtWhAzQZx7DV70A7ew55qo  
+ 
+
+        
+
+      </script>
+  </body>
+  
+  </html>
