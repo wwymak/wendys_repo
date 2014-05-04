@@ -41,7 +41,7 @@
         var width = 950, height = 950;
         var svg = d3.select("#map").append("svg").attr("width", width).attr("height", height);
         // var colorScale = d3.scale.category20c();
-        var colorScale = d3.scale.ordinal()
+        var colorScale = d3.scale.linear()
                             .range(["#ffffe5","#ffffcc","#fff7bc","#ffeda0","#fee391","#fed976","#fec44f","#feb24c","#fe9929","#fd8d3c","#ec7014","#fc4e2a","#cc4c02","#e31a1c","#993404","#bd0026","#662506","#800026"]);                    
         d3.csv("UK_popDensity_2011_1.csv", function(_data){
           colorScale.domain([

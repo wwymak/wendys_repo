@@ -9,6 +9,7 @@
     <script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCAI78RB-u_WmtWhAzQZx7DV70A7ew55qo&sensor=false"></script>
     <script src="../js/d3.js" charset="utf-8"></script>
     <script src="../js/topojson.js" charset="utf-8"></script>
+    <script src="../js/queue.js" charset="utf-8"></script>
     <script src="cambridgeshire_mapInfo.js" charset="utf-8"></script>
     <style>
       /*  .subunit.SCT { fill: #ddc; }
@@ -43,17 +44,96 @@
           border-radius: 8px;         /* set how rounded the edges of the rectangle is */
           pointer-events: none;           /* 'none' tells the mouse to ignore the rectangle */
       }
-/*
-        .subunit-boundary.IRL {
-          stroke: #aaa;
-        }
-*/
+
+      
+
+      /*.menu {
+height:100%;
+}
+
+.menu.collapse {
+float:left;
+height: 100% !important;
+width: auto;
+}
+
+menu.collapse.height {
+position: relative;
+height: 0;
+overflow: hidden;
+-webkit-transition: height 0.35s ease;
+-moz-transition: height 0.35s ease;
+-o-transition: height 0.35s ease;
+transition: height 0.35s ease;
+}
+
+menu.collapse.width {
+position: relative;
+width: 0;
+overflow: hidden;
+-webkit-transition: width 0.35s ease;
+-moz-transition: width 0.35s ease;
+-o-transition: width 0.35s ease;
+transition: width 0.35s ease;
+}
+
+menu.collapse.in.width {
+width: auto;
+}
+
+menu.collapse.in.height {
+height: auto;
+}
+
+menu.collapse-inner {
+position: relative;
+width: 300px;
+height: 100%;
+}
+
+.view {
+width: 50%;
+height: 100%;
+overflow: hidden;
+}*/
     </style>
   </head>
   
   <body>
     <div class="container">
-      <div class="row">
+    <div  class="detailsContainer">
+    <button type="button" class="btn" id="toggleButton" data-toggle="collapse" data-target="#details">
+  Details of Cambridgeshire accidents
+</button>
+<!-- <div class="menu nav-collapse collapse width"></div> -->
+<!-- <div class="collapse-inner">
+  <div class="navbar navbar-inverse">
+    <div class="navbar-inner">
+      Menu
+    </div>
+  </div>
+</div>
+        
+
+        <div class="view">
+          <div class="navbar navbar-inverse">
+            <div class="navbar-inner">
+              <button type="button" class="btn btn-navbar" data-toggle="collapse" data-target="#menu">
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+              </button>
+            </div>
+          </div>
+          <div id="details">
+          </div>
+
+ -->
+    <div id="details" class="collapse view">Placeholder to show accident stats</div>
+    </div>
+
+
+      <div class="row" position:absolute>
         <div class="col-md-12 ">
           <div id="map"></div>
         </div>
@@ -62,35 +142,41 @@
       <script type="text/javascript">
 
       
+        $("#toggleButton").on("mouseover", function(){$("#details").collapse('show');})
+                  .on("mouseout", function(){$("#details").collapse('hide');})
 
-
-   function findAddress(latitude, longitude){
-    var geocoder = new google.maps.Geocoder();
-      var latlng = new google.maps.LatLng(latitude, longitude);
-   geocoder.geocode({'latLng': latlng}, function(results, status) {
-      if (status == google.maps.GeocoderStatus.OK) {
-        if (results[1]) {
-          var location = results[0].formatted_address;
-          console.log(location);
-        }
-      } else {
-        console.log("Geocoder failed due to: " + status);
-      }
-    });
- }
+        function findAddress(latitude, longitude){
+          var geocoder = new google.maps.Geocoder();
+          var latlng = new google.maps.LatLng(latitude, longitude);
+          geocoder.geocode({'latLng': latlng}, function(results, status) {
+            if (status == google.maps.GeocoderStatus.OK) {
+              if (results[1]) {
+                var location = results[0].formatted_address;
+                console.log(location);
+              }
+            } else {
+              console.log("Geocoder failed due to: " + status);
+            }
+          });
+        }  
 
         var width = 950, height = 950;
         var tooltip = d3.select("#map").append("div")   // declare the properties for the div used for the tooltips
                         .attr("class", "tooltip")               // apply the 'tooltip' class
                         .style("opacity", 0);
         var svg = d3.select("#map").append("svg").attr("width", width).attr("height", height);
+
+        var barContainer = d3.select("#details").append("svg").attr("width", 400).attr("height", height)
         // var colorScale = d3.scale.category20c();
         var colorScale = d3.scale.ordinal()
-                            .range(["#ffffe5","#ffffcc","#fff7bc","#ffeda0","#fee391","#fed976","#fec44f","#feb24c","#fe9929","#fd8d3c","#ec7014","#fc4e2a","#cc4c02","#e31a1c","#993404","#bd0026","#662506","#800026"]);   
-       var projection = d3.geo.albers().center([2.5,53.3]).rotate([4.4,0]).parallels([50,60]).scale(35000).translate([-100,-100]);
-            var path = d3.geo.path().projection(projection);  
+                            .range(["#ffffe5","#ffffcc","#fff7bc","#ffeda0","#fee391","#fed976","#fec44f","#feb24c","#fe9929","#fd8d3c","#ec7014","#fc4e2a","#cc4c02","#e31a1c","#993404","#bd0026","#662506","#800026"]);  
+
+        var roadColor = d3.scale.linear().range(["red", "green"]) 
+        var projection = d3.geo.albers().center([2.7,53.1]).rotate([4.4,0]).parallels([50,60]).scale(40000).translate([-100,-100]);
+        var path = d3.geo.path().projection(projection);  
         
         var g = svg.append("g");
+        var barGroup = barContainer.append("g")
         // var g2= svg.append("g");
 
         //     g2.selectAll("path2")
@@ -157,11 +243,13 @@
              .enter()
              .append("path")
              .attr("d", path).attr("class", "road")
+             .on("mouseover", function(d){console.log(d.properties.NUMBER)})
           })
 
         });
 
         d3.csv("cambridgeshireAccident2012.csv", function(data){
+
           return {
           id: +data.Accident_Index,
           longitude: +data.Longitude,
@@ -195,6 +283,44 @@
           });
 
       });
+accid_data = [];
+//the below data already sorted in descending order, so only need to choose to plot the top ~15 or so ()
+d3.csv("accidents_by_raod_all_v2.csv", function(data){
+  
+  data.forEach(function(item){
+    var temp = {}
+    temp.roadname = item.Roadname;
+    temp.accid_num = +item.number_of_accidents;
+    accid_data.push(temp)
+  })
+//get the top 15 roads with most accidents, removing the 1st item(unclassified road)
+  var dataToPlot = accid_data.slice(1, 16)
+
+  console.log(dataToPlot)
+
+  var maxAccidents = dataToPlot[0].accid_num;
+
+  barGroup.selectAll("barRect")
+          .data(dataToPlot).enter()
+          .append("rect")
+          .attr("width", function(d){return d.accid_num * 250/maxAccidents})
+          .attr("height", 15)
+          .attr("x", 10)
+          .attr("y", function(d, i){return i*25})
+          .style("fill", "blue");
+  //   return {
+  //     roadName: d.Roadname,
+  //     accid_num: +d.number_of_accidents
+  //   }
+  // },
+  // function(error, rows){
+  //   console.log(rows);
+
+  console.log(accid_data);
+  }
+
+)
+    
 
         
 
