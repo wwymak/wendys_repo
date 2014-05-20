@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<script src="../js/jquery-1.10.2.min.js" type="text/javascript"></script>
+		<!--<script src="../js/three.js" type="text/javascript"></script>-->
+		<style>
+			body{
+				margin: 0;
+				overflow: hidden;
+				/*background-color: #ffffff;*/
+			}
+		</style>
+	</head>
+	<body>
+		<div id="canvas"><button id="playBtn">Play</button></div>
+		<script type="text/javascript">
+		//Chris_Zabriskie_Cylinder_One.mp3 from http://freemusicarchive.org
+
+		var contextClass = (window.AudioContext || 
+		    window.webkitAudioContext || 
+		    window.mozAudioContext || 
+		    window.oAudioContext || 
+		    window.msAudioContext);
+		if (contextClass) {
+		    // Web Audio API is available.
+		    var context = new contextClass();
+		}
+		else {
+		// Web Audio API is not available. Ask the user to use a supported browser.
+			$("#canvas").html("web audio api not available. Please use a modern browser !")
+		}
+		var sound;
+		var request = new XMLHttpRequest();
+		var url = 'Chris_Zabriskie_Cylinder_One.mp3';
+		request.open('GET', url, true);
+		request.responseType = 'arraybuffer';
+
+		// Decode asynchronously
+		request.onload = function() {
+		    context.decodeAudioData(request.response, function(theBuffer) {
+		    sound = theBuffer;
+		    $("#playBtn").on("click", function(){play(sound)});
+		  }, onError);
+		}
+		request.send();
+
+		function play(buffer){
+			var source = context.createBufferSource();
+			source.buffer= buffer;
+			source.connect(context.destination);
+			source.start(0);
+
+		}
+
+		function onError(e) {
+		  console.log('Error', e);
+		}
+
+
+		
+
+		</script>
+	</body>
+</html>

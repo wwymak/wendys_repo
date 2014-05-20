@@ -43,14 +43,30 @@
         var ambientLight = new THREE.AmbientLight( 0xcccc00 );
         scene.add(ambientLight);
 
-
-        var lineMaterial = new THREE.LineBasicMaterial( {linewidth: 1, color: 0x7a4298} );
         var lineGeometry = new THREE.Geometry();
 
         var points = dragon(15, 100);
         // console.log(points);
+        var colors = [];
+        var i = 0;
+        var i_end = points.length;
+        // console.log(points);
         // var points = [{x:0, y:0, z:0}, {x: 10, y: 10, z: 0}, {x: 20, y: 0, z:0}];
-        points.forEach(function(item){lineGeometry.vertices.push(new THREE.Vector3( item.x, item.y, item.z ))});
+        points.forEach(function(item){
+            lineGeometry.vertices.push(new THREE.Vector3( item.x, item.y, item.z ));
+            colors[i] = new THREE.Color(0x7e389d);
+            // colors[i].setRGB(Math.abs(item.x/100), Math.abs(item.y /100), 0.5+ Math.abs(item.x/100));
+            i++;
+        });
+
+        lineGeometry.colors = colors;
+
+        var lineMaterial = new THREE.LineBasicMaterial({
+            opacity: 1.0,
+            linewidth: 1,
+            // vertexColors: THREE.VertexColors
+            vertexColors: THREE.VertexColors });
+        
 
         var line = new THREE.Line( lineGeometry, lineMaterial);
 		line.position.set(0, 0, -60);

@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html>
+	<head>
+	    <meta charset="utf-8">
+	    <link href="../css/bootstrap.min.css" type="text/css" rel="stylesheet"/>
+	    <link rel="stylesheet" type="text/css" href="../css/dc.css"/>
+	    <script src="../js/jquery-1.10.2.min.js" type="text/javascript"></script>
+	    <script src="../js/bootstrap.min.js"></script> 
+	    <script src="../js/d3.js" charset="utf-8"></script>
+	    <style>
+	    </style>
+    </head>
+    <body>
+    <div id="chart"></div>
+    <script type="text/javascript">
+		
+		var dim = 800; 
+		var interval = 30;
+		var maxNum = 1000;
+			
+		var svg = d3.select("#chart").append("svg")
+					.attr("width", dim).attr("height", dim);
+
+		function initBox(){
+			var x = Math.random() * dim;
+			var y = Math.random() * dim;
+			svg.append("rect").attr("x", x).attr("y", y).attr("height", 0);
+		}
+
+		function draw(){
+
+		}
+
+		function exand(){
+
+		}
+
+//
+
+
+
+    </script>
+    </body>
+</html>
