@@ -29,25 +29,35 @@
 		// Web Audio API is not available. Ask the user to use a supported browser.
 			$("#canvas").html("web audio api not available. Please use a modern browser !")
 		}
-		var sound;
-		var request = new XMLHttpRequest();
-		var url = 'Chris_Zabriskie_Cylinder_One.mp3';
-		request.open('GET', url, true);
-		request.responseType = 'arraybuffer';
 
-		// Decode asynchronously
-		request.onload = function() {
-		    context.decodeAudioData(request.response, function(theBuffer) {
-		    sound = theBuffer;
-		    $("#playBtn").on("click", function(){play(sound)});
-		  }, onError);
+		var sound, source;
+
+		setupAudioNode();
+		loadSound('Chris_Zabriskie_Cylinder_One.mp3');
+
+		function loadSound(url){
+			var request = new XMLHttpRequest();
+				// var url = 'Chris_Zabriskie_Cylinder_One.mp3';
+			request.open('GET', url, true);
+			request.responseType = 'arraybuffer';
+	
+			// Decode asynchronously
+			request.onload = function() {
+			    context.decodeAudioData(request.response, function(theBuffer) {
+			    sound = theBuffer;
+			    $("#playBtn").on("click", function(){play(sound)});
+			  }, onError);
+			}
+			request.send();
 		}
-		request.send();
+
+		function setupAudioNode(){
+			source = context.createBufferSource();
+			source.connect(context.destination);
+		}
 
 		function play(buffer){
-			var source = context.createBufferSource();
 			source.buffer= buffer;
-			source.connect(context.destination);
 			source.start(0);
 
 		}
@@ -55,6 +65,17 @@
 		function onError(e) {
 		  console.log('Error', e);
 		}
+
+		var analyser = context.createAnalyser();
+		analyser.fftsize = 1024;
+		analyser.smoothingTimeConstant = 0.3;
+
+		var javascriptNode = context.createScriptProcessor(2048,1,1);
+		javascriptNode.onaudioprocess = function(){
+			
+		}
+
+
 
 
 		
