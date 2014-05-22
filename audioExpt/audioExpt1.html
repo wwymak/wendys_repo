@@ -84,6 +84,12 @@
 
 		// var javascriptNode = context.createScriptProcessor(2048,1,1);
 		javascriptNode.onaudioprocess = function(){
+			var array = new Unit8Array(analyser.frequencyBinCount);
+
+			var gradient=ctx.createLinearGradient(0,0,170,0);
+			gradient.addColorStop(0,"black");
+			gradient.addColorStop(0.5,"red");
+			ctx.fillStyle = gradient;
 
 		}
 
