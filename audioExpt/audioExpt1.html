@@ -35,6 +35,10 @@
 		var sound, source;
         var canvas = document.getElementById('canvas');
 		var ctx = canvas.getContext('2d');
+		var gradient=ctx.createLinearGradient(0,0,60,130);
+		gradient.addColorStop(0,"black");
+		gradient.addColorStop(0.5,"red");
+		gradient.addColorStop(1, "white");
 
 		setupAudioNode();
 		loadSound('Chris_Zabriskie_Cylinder_One.mp3');
@@ -86,9 +90,7 @@
 		javascriptNode.onaudioprocess = function(){
 			var array = new Unit8Array(analyser.frequencyBinCount);
 
-			var gradient=ctx.createLinearGradient(0,0,170,0);
-			gradient.addColorStop(0,"black");
-			gradient.addColorStop(0.5,"red");
+
 			ctx.fillStyle = gradient;
 
 		}
