@@ -12,14 +12,15 @@
 		</style>
 	</head>
 	<body>
-		<div id="canvas"><button id="playBtn">Play</button></div>
+		<canvas id="canvas"></canvas>
+		<button id="playBtn">Play</button>
 		<script type="text/javascript">
 		//Chris_Zabriskie_Cylinder_One.mp3 from http://freemusicarchive.org
 
-		var contextClass = (window.AudioContext || 
-		    window.webkitAudioContext || 
-		    window.mozAudioContext || 
-		    window.oAudioContext || 
+		var contextClass = (window.AudioContext ||
+		    window.webkitAudioContext ||
+		    window.mozAudioContext ||
+		    window.oAudioContext ||
 		    window.msAudioContext);
 		if (contextClass) {
 		    // Web Audio API is available.
@@ -27,10 +28,13 @@
 		}
 		else {
 		// Web Audio API is not available. Ask the user to use a supported browser.
-			$("#canvas").html("web audio api not available. Please use a modern browser !")
+			alert("web audio api not available. Please use a modern browser !");
+
 		}
 
 		var sound, source;
+        var canvas = document.getElementById('canvas');
+		var ctx = canvas.getContext('2d');
 
 		setupAudioNode();
 		loadSound('Chris_Zabriskie_Cylinder_One.mp3');
@@ -40,7 +44,7 @@
 				// var url = 'Chris_Zabriskie_Cylinder_One.mp3';
 			request.open('GET', url, true);
 			request.responseType = 'arraybuffer';
-	
+
 			// Decode asynchronously
 			request.onload = function() {
 			    context.decodeAudioData(request.response, function(theBuffer) {
@@ -54,6 +58,16 @@
 		function setupAudioNode(){
 			source = context.createBufferSource();
 			source.connect(context.destination);
+
+			javascriptNode = context.createScriptProcessor(2048,1,1);
+			javascriptNode.connect(context.destination);
+
+			analyser = context.createAnalyser();
+			analyser.fftsize = 1024;
+			analyser.smoothingTimeConstant = 0.3;
+
+			source.connect(analyser);
+			analyser.connect(javascriptNode);
 		}
 
 		function play(buffer){
@@ -66,19 +80,17 @@
 		  console.log('Error', e);
 		}
 
-		var analyser = context.createAnalyser();
-		analyser.fftsize = 1024;
-		analyser.smoothingTimeConstant = 0.3;
 
-		var javascriptNode = context.createScriptProcessor(2048,1,1);
+
+		// var javascriptNode = context.createScriptProcessor(2048,1,1);
 		javascriptNode.onaudioprocess = function(){
-			
+
 		}
 
 
 
 
-		
+
 
 		</script>
 	</body>
