@@ -35,7 +35,7 @@
 		var sound, source;
         var canvas = document.getElementById('canvas');
 		var ctx = canvas.getContext('2d');
-		var gradient=ctx.createLinearGradient(0,0,60,130);
+		var gradient=ctx.createLinearGradient(0,0,60,0);
 		gradient.addColorStop(0,"black");
 		gradient.addColorStop(0.5,"red");
 		gradient.addColorStop(1, "white");
@@ -88,11 +88,34 @@
 
 		// var javascriptNode = context.createScriptProcessor(2048,1,1);
 		javascriptNode.onaudioprocess = function(){
-			var array = new Unit8Array(analyser.frequencyBinCount);
+			var array = new Uint8Array(analyser.frequencyBinCount);
+			analyser.getByteFrequencyData(array);
 
+			var averageVol = getAverageVolume(array);
 
+			ctx.clearRect(0, 0, 60, 130);
 			ctx.fillStyle = gradient;
 
+			ctx.fillRect(25,130 - averageVol, 60,130);
+			
+
+		}
+
+		function getAverageVolume(array){
+			var values =0;
+			var average;
+			var length = array.length ;
+ 
+			for (var i=0; i< length; i++){
+				values += array[i];
+			}
+
+			average = values/length;
+			return average;
+		}
+
+		function pausePlay(){
+			source.stop();
 		}
 
 
