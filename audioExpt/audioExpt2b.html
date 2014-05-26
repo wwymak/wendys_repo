@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<script src="../js/jquery-1.10.2.min.js" type="text/javascript"></script>
+		<script src="../js/d3.min.js" type="text/javascript"></script>
+		<style>
+			body{
+				margin: 0;
+				overflow: hidden;
+				/*background-color: #ffffff;*/
+			}
+
+			canvas {
+				padding: 20px;
+			}
+		</style>
+	</head>
+	<body>
+
+	<button id="playBtn">Play/Pause</button>
+	<div id="canvas"></div>
+	<script>
+
+
+	function init(){
+		var contextClass = (window.AudioContext ||
+		    window.webkitAudioContext ||
+		    window.mozAudioContext ||
+		    window.oAudioContext ||
+		    window.msAudioContext);
+		if (contextClass) {
+		    // Web Audio API is available.
+		    context = new contextClass();
+		}
+		else {
+		// Web Audio API is not available. Ask the user to use a supported browser.
+			alert("web audio api not available. Please use a modern browser !");
+
+		}
+
+
+		window.requestAnimFrame = (function(){
+			return  window.requestAnimationFrame || 
+			  window.webkitRequestAnimationFrame || 
+			  window.mozRequestAnimationFrame    || 
+			  window.oRequestAnimationFrame      || 
+			  window.msRequestAnimationFrame     || 
+			  function( callback ){
+			  window.setTimeout(callback, 1000 / 60);
+			};
+		})();
+
+		bufferLoader = new BufferLoader(context, ['The_Rovers_Sonny.mp3'], finishedLoading )
+
+		bufferLoader.load();
+	}
+
+	function finishedLoading(bufferList){
+		// for (var i = 0; i<bufferList.length; i++){
+		// 	var buffer = bufferList[i];
+		// 	var 
+		// }
+		source = context.createBufferSource();
+		source.buffer = bufferList[0];
+		source.connect(context.destination);
+		source.start(0)
+
+	}
+
+
+	function loadSound(){
+
+		bufferLoader = new BufferLoader(context, soundPaths, finishedLoading )
+
+		bufferLoader.load();
+	}
+//===================
+		var context;
+		var bufferLoader;
+		var fft_size = 1024;
+		var timeConstant = 0.3;
+		var startTime = 0;
+		var offSetTime = 0;
+		var sound;
+		var isPlaying = false;
+
+		function playSound(buffer, time){
+			source = context.createBufferSource();
+			source.buffer = buffer;
+			source.connect(context.destination);
+			source.start(time)
+		}
+
+		function toggleSound(){
+			if (isPlaying = true){
+				source.noteOff(0);
+				offSetTime += context.currentTime- startTime;
+				isPlaying = false
+			}
+			else {
+				startTime = context.currentTime;
+				playSound(sound, startTime)
+
+				isPlaying = true;
+
+			}
+
+		}
+
+		// function loadSound(url){
+		// 	var request = new XMLHttpRequest();
+		// 	request.open('GET', url, true);
+		// 	request.responseType = 'arraybuffer';
+
+		// 	request.onload = function(){
+		// 		context.decodeAudioData(request.response, function(buffer) {
+		// 			if(!buffer){
+		// 				alert("error loading audio data" +url);
+		// 				return
+		// 			}
+		// 			sound =buffer;
+		// 			// playSound(sound, startTime);
+		// 		}, onError)
+
+		// 	}
+		// 	request.send();
+		// }
+
+		// function onError(e) {
+		//   console.log('Error', e);
+		// }
+
+		function fftProcess(){
+			var analyser = context.createAnalyser();
+			analyser.fftsize = fft_size;
+			analyser.smoothingTimeConstant = timeConstant;
+ 
+		}
+
+		function draw(){
+			//......
+			if(isPlaying == true){
+				requestAnimFrame(draw)
+			}
+		}
+
+		function BufferLoader(context, urlList, callback){
+			this.onload = callback;
+			this.context = context;
+			this.urlList = urlList;
+			this.bufferList = new Array();
+			this.loadCount = 0;
+		}
+
+		BufferLoader.prototype.loadBuffer = function(url, index){
+			var request = new XMLHttpRequest();
+			request.open('GET', url, true);
+			request.responseType = 'arraybuffer';
+
+			var loader = this;
+			request.onload = function(){
+				loader.context.decodeAudioData(request.response, function(buffer) {
+					if(!buffer){
+						alert("error loading audio data" +url);
+						return
+					}
+					loader.bufferList[index] = buffer;
+
+					if( loader.loadCount +1 ==loader.urlList.length)
+					loader.onload(loader.bufferList)
+				}, 
+					function(error) {
+				        console.error('decodeAudioData error', error);
+				    }
+			    )
+			}
+			request.send();
+
+		}
+
+		BufferLoader.prototype.load = function(){
+			for (var i = 0; i<this.urlList.length; i++){
+				this.loadBuffer(this.urlList[i], i)
+			}
+		}
+
+
+		$(document).ready(function(){
+			init();
+			// loadSound('The_Rovers_Sonny.mp3')
+			// 		$("#playBtn").on("click", function(){
+			// playSound(sound, startTime)});
+		});
+
+
+
+		var width = 800, height = 800;
+
+		var svg = d3.select("#canvas").append("svg")
+					.attr("width", width).attr("height", height);
+		var dataG = svg.append("g");
+
+
+
+
+
+	</script>
+	</body>
+	</html>

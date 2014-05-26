@@ -1,0 +1,307 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <script src="../js/jquery-1.10.2.min.js" type="text/javascript"></script>
+    <!--<script src="../js/three.js" type="text/javascript"></script>-->
+    <style>
+      body {
+  background: black;
+  font-family: 'Open Sans', sans-serif;
+  color: #ccc;
+}
+
+#container {
+  margin: 0 auto;
+  width: 640px;
+  background: #111;
+  padding: 20px;
+  border: 1px #222 solid;
+}
+
+#header h1 { margin: 0; }
+#nav ul { margin: 0; }
+#nav li {
+  font-weight: bold;
+  float: right;
+  list-style: none;
+  margin-left: 10px;
+}
+
+#header a, #nav a { color: rgb(28, 161, 202); text-decoration: none; }
+#header a:hover, #nav a:hover { color: rgb(157, 204, 255); text-decoration: underline; }
+
+article a { color: #FEFEF2; text-decoration: none; }
+article a:hover { color: white; text-decoration: underline; }
+
+a { color: #FEF0C9; text-decoration: none; }
+a:hover { color: #FEF6E4; text-decoration: underline; }
+
+article {
+  font-weight: bold;
+  margin: 20px;
+  padding: 20px;
+  text-align: center;
+  cursor: pointer;
+  color: black;
+}
+
+#content article:nth-child(6n+1) { background: #FA6B67; }
+#content article:nth-child(6n+2) { background: #70CA5D; }
+#content article:nth-child(6n+3) { background: #3CC9E4; }
+#content article:nth-child(6n+4) { background: #EC945E; }
+#content article:nth-child(6n+5) { background: #7189DE; }
+#content article:nth-child(6n+6) { background: #E798DC; }
+
+
+.sample .name {
+  font-size: 22px;
+  padding-bottom: 5px;
+  color: #fee;
+}
+
+.sample .info {
+  color: #B0F0F8;
+}
+
+input[type='range'] {
+  -webkit-appearance: none;
+  background-color: gray;
+  height: 20px;
+  border-radius: 15px;
+  padding: 0 3px;
+}
+
+input[type='range']::-webkit-slider-thumb {
+  vertical-align: middle;
+  -webkit-appearance: none;
+  background-color: #444;
+  width: 16px;
+  height: 16px;
+  border-radius: 16px;
+}
+
+input[type="checkbox"] {
+  display:none;
+}
+input[type="checkbox"] + label span {
+  display:inline-block;
+  width:19px;
+  height:19px;
+  margin:-1px 4px 0 0;
+  vertical-align:middle;
+  background:url(images/check_radio_sheet.png) left top no-repeat;
+  cursor:pointer;
+}
+input[type="checkbox"]:checked + label span {
+  background:url(images/check_radio_sheet.png) -19px top no-repeat;
+}
+
+    </style>
+  </head>
+  <body>
+    <canvas id="canvas" width=1200 height=600></canvas>
+    <button id="playBtn">Play</button>
+    <button id="stopBtn">Stop</button>
+    <script type="text/javascript">
+
+// Start off by initializing a new context.
+context = new webkitAudioContext();
+
+// shim layer with setTimeout fallback
+window.requestAnimFrame = (function(){
+return  window.requestAnimationFrame       || 
+  window.webkitRequestAnimationFrame || 
+  window.mozRequestAnimationFrame    || 
+  window.oRequestAnimationFrame      || 
+  window.msRequestAnimationFrame     || 
+  function( callback ){
+  window.setTimeout(callback, 1000 / 60);
+};
+})();
+
+
+function playSound(buffer, time) {
+  var source = context.createBufferSource();
+  source.buffer = buffer;
+  source.connect(context.destination);
+  source.start(time);
+}
+
+function loadSounds(obj, soundMap, callback) {
+  // Array-ify
+  var names = [];
+  var paths = [];
+  for (var name in soundMap) {
+    var path = soundMap[name];
+    names.push(name);
+    paths.push(path);
+  }
+  bufferLoader = new BufferLoader(context, paths, function(bufferList) {
+    for (var i = 0; i < bufferList.length; i++) {
+      var buffer = bufferList[i];
+      var name = names[i];
+      obj[name] = buffer;
+    }
+    if (callback) {
+      callback();
+    }
+  });
+  bufferLoader.load();
+}
+
+
+
+
+function BufferLoader(context, urlList, callback) {
+  this.context = context;
+  this.urlList = urlList;
+  this.onload = callback;
+  this.bufferList = new Array();
+  this.loadCount = 0;
+}
+
+BufferLoader.prototype.loadBuffer = function(url, index) {
+  // Load buffer asynchronously
+  var request = new XMLHttpRequest();
+  request.open("GET", url, true);
+  request.responseType = "arraybuffer";
+
+  var loader = this;
+
+  request.onload = function() {
+    // Asynchronously decode the audio file data in request.response
+    loader.context.decodeAudioData(
+      request.response,
+      function(buffer) {
+        if (!buffer) {
+          alert('error decoding file data: ' + url);
+          return;
+        }
+        loader.bufferList[index] = buffer;
+        if (++loader.loadCount == loader.urlList.length)
+          loader.onload(loader.bufferList);
+      },
+      function(error) {
+        console.error('decodeAudioData error', error);
+      }
+    );
+  }
+
+  request.onerror = function() {
+    alert('BufferLoader: XHR error');
+  }
+
+  request.send();
+};
+
+BufferLoader.prototype.load = function() {
+  for (var i = 0; i < this.urlList.length; ++i)
+  this.loadBuffer(this.urlList[i], i);
+};
+
+var WIDTH = 1200;
+var HEIGHT = 600;
+
+// Interesting parameters to tweak!
+var SMOOTHING = 0.8;
+var FFT_SIZE = 2048;
+
+function VisualizerSample() {
+  this.analyser = context.createAnalyser();
+
+  this.analyser.connect(context.destination);
+  this.analyser.minDecibels = -140;
+  this.analyser.maxDecibels = 0;
+  loadSounds(this, {
+    buffer: 'The_Rovers_Sonny.mp3'
+    //buffer: 'sound.wav'
+  });
+  this.freqs = new Uint8Array(this.analyser.frequencyBinCount);
+  this.times = new Uint8Array(this.analyser.frequencyBinCount);
+
+  this.isPlaying = false;
+  this.startTime = 0;
+  this.startOffset = 0;
+}
+
+// Toggle playback
+VisualizerSample.prototype.togglePlayback = function() {
+  if (this.isPlaying) {
+    // Stop playback
+    this.source.noteOff(0);
+    this.startOffset += context.currentTime - this.startTime;
+    console.log('paused at', this.startOffset);
+    // Save the position of the play head.
+  } else {
+    this.startTime = context.currentTime;
+    console.log('started at', this.startOffset);
+    this.source = context.createBufferSource();
+    // Connect graph
+    this.source.connect(this.analyser);
+    this.source.buffer = this.buffer;
+    this.source.loop = true;
+    // Start playback, but make sure we stay in bound of the buffer.
+    this.source.start(0, this.startOffset % this.buffer.duration);
+    // Start visualizer.
+    requestAnimationFrame(this.draw.bind(this));
+  }
+  this.isPlaying = !this.isPlaying;
+}
+
+
+VisualizerSample.prototype.draw = function() {
+  this.analyser.smoothingTimeConstant = SMOOTHING;
+  this.analyser.fftSize = FFT_SIZE;
+
+  // Get the frequency data from the currently playing music
+  this.analyser.getByteFrequencyData(this.freqs);
+  this.analyser.getByteTimeDomainData(this.times);
+
+  var width = Math.floor(1/this.freqs.length, 10);
+
+  var canvas = document.querySelector('canvas');
+  var drawContext = canvas.getContext('2d');
+  canvas.width = WIDTH;
+  canvas.height = HEIGHT;
+  // Draw the frequency domain chart.
+  for (var i = 0; i < this.analyser.frequencyBinCount; i++) {
+    var value = this.freqs[i];
+    var percent = value / 256;
+    var height = HEIGHT * percent;
+    var offset = HEIGHT - height - 1;
+    var barWidth = WIDTH/this.analyser.frequencyBinCount;
+    var hue = i/this.analyser.frequencyBinCount * 360;
+    drawContext.fillStyle = 'hsl(' + hue + ', 100%, 50%)';
+    drawContext.fillRect(i * barWidth, offset, barWidth, height);
+  }
+
+  // Draw the time domain chart.
+  for (var i = 0; i < this.analyser.frequencyBinCount; i++) {
+    var value = this.times[i];
+    var percent = value / 256;
+    var height = HEIGHT * percent;
+    var offset = HEIGHT - height - 1;
+    var barWidth = WIDTH/this.analyser.frequencyBinCount;
+    drawContext.fillStyle = 'white';
+    drawContext.fillRect(i * barWidth, offset, 1, 2);
+  }
+
+  if (this.isPlaying) {
+    requestAnimationFrame(this.draw.bind(this));
+  }
+}
+
+VisualizerSample.prototype.getFrequencyValue = function(freq) {
+  var nyquist = context.sampleRate/2;
+  var index = Math.round(freq/nyquist * this.freqs.length);
+  return this.freqs[index];
+}
+
+
+var sample = new VisualizerSample();
+document.querySelector('#playBtn').addEventListener('click', function() {
+  sample.togglePlayback()
+});
+</script>
+</body>
+</html>
