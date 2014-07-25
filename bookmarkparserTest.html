@@ -32,6 +32,7 @@
 
 	    var bookmarkArray = [];
 
+	    //just making sure that stuff are jQuery objects before working on them => ie convertToJQuery!
 	    function cToJQ(node){
 	    	if (node instanceof jQuery){
 	    		nodeNew = node
@@ -63,28 +64,34 @@
 
 	    	var nodeArray = node.find('dt');
 
+
 	    	if (nodeArray.length >0){
 	    		for (var j = 0; j<nodeArray.length; j++) {
+	    			var tags = [];
 	    			var dataToParse = cToJQ(nodeArray[j]);
+	    			var tag = dataToParse.find('h3').text().trim();
+	    			tags.push(tag)
+
 	    			parseNode(dataToParse)
 
 	    		}
 	    	}
 
 	    	else {
-	    		parseIndividual($(node));
+	    		parseIndividual($(node, tags));
 	    	}
 
 	    }
 
-	    function parseIndividual(input){
+	    function parseIndividual(input, tags){
 	    	var el = cToJQ(input)
 	    	// function parseIndividual(el, tags){
 	    	var bookmark= {
 		    	"bookmark_url" : el.find('a').prop('href'),
 		    	"bookmark_title": el.text().trim(),
 		    	"bookmark_created": Math.round(Date.now()/1000),
-		    	"bookmark_modified": Math.round(Date.now()/1000)
+		    	"bookmark_modified": Math.round(Date.now()/1000),
+		    	"bookmark_tags" : tags
 		    }
 
 		    bookmarkArray.push(bookmark)
