@@ -30,17 +30,67 @@
 
 	    $("#parseFile").on("click", parseFile)
 
-	    function parseFile(){
-	    	$("#displayArea").find('dt')
+	    var bookmarkArray = [];
+
+	    function cToJQ(node){
+	    	if (node instanceof jQuery){
+	    		nodeNew = node
+	    	}
+	    	else {
+	    		nodeNew = $(node)
+	    	}
+			return nodeNew
+		}
+
+	    function parseFile(tree){
+	    	var bookmarkTree = tree.find('dt')
+	    	for (var i = 0; i<bookmarkTree.length; i++){
+	    		if (tree[i] instanceof jQuery){
+		    		tree[i] = tree[i]
+		    	}
+		    	else {
+		    		tree[i] = $(tree[i])
+		    	}
+
+	    		// var tags = [];
+	    		// tags.push(tree[i].find('h3'))
+	    		// parseNode(tree[i])
+	    	}
+	    }
+		// function parseNode(node, tags){
+	    function parseNode(input){
+	    	var node = cToJQ(input)
+
+	    	var nodeArray = node.find('dt');
+
+	    	if (nodeArray.length >0){
+	    		for (var j = 0; j<nodeArray.length; j++) {
+	    			var dataToParse = cToJQ(nodeArray[j]);
+	    			parseNode(dataToParse)
+
+	    		}
+	    	}
+
+	    	else {
+	    		parseIndividual($(node));
+	    	}
+
 	    }
 
-	    function parseIndividual(el, tags){
+	    function parseIndividual(input){
+	    	var el = cToJQ(input)
+	    	// function parseIndividual(el, tags){
 	    	var bookmark= {
-	    	"bookmark_url" : el.prop('href'),
-	    	"bookmark_title": el.text(),
-	    	"bookmark_created": Math.round(Date.now()/1000),
-	    	"bookmark_modified": Math.round(Date.now()/1000)
+		    	"bookmark_url" : el.find('a').prop('href'),
+		    	"bookmark_title": el.text().trim(),
+		    	"bookmark_created": Math.round(Date.now()/1000),
+		    	"bookmark_modified": Math.round(Date.now()/1000)
 		    }
+
+		    bookmarkArray.push(bookmark)
 	    }
+
+
+
     </script></body>
 </html>
