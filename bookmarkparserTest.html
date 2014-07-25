@@ -1,0 +1,46 @@
+<!DOCTYPE HTML>
+<html>
+    <head>
+    	<script type="text/javascript" src= "js/jquery-1.10.2.min.js"></script>
+    	<script type="text/javascript" src="js/papaparse.min.js"></script>
+    </head>
+    <body>
+    	<div id="testContainer"></div>
+    	<input id="myfiles" type="file">
+    	<button id="parseFile">Parse</button>
+    	<div id="displayArea"></div>
+    	<script>
+    	var fileInput = document.getElementById('myfiles');
+    	var fileDisplay = document.getElementById("displayArea")
+
+    	fileInput.addEventListener('change', function(e) {
+    		var file = fileInput.files[0];
+
+    		var reader = new FileReader();
+
+			reader.onload = function(e) {
+			    fileDisplay.innerHTML = reader.result;
+			  }
+
+			  reader.readAsText(file);
+
+
+
+	    });
+
+	    $("#parseFile").on("click", parseFile)
+
+	    function parseFile(){
+	    	$("#displayArea").find('dt')
+	    }
+
+	    function parseIndividual(el, tags){
+	    	var bookmark= {
+	    	"bookmark_url" : el.prop('href'),
+	    	"bookmark_title": el.text(),
+	    	"bookmark_created": Math.round(Date.now()/1000),
+	    	"bookmark_modified": Math.round(Date.now()/1000)
+		    }
+	    }
+    </script></body>
+</html>
