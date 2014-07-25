@@ -6,7 +6,7 @@
 		<style>
 			body{
 				margin: 0;
-				overflow: hidden;
+				/*overflow: hidden;*/
 				/*background-color: #ffffff;*/
 			}
 
@@ -16,8 +16,9 @@
 		</style>
 	</head>
 	<body>
-		<canvas id="canvas"></canvas>
+		<canvas id="canvas" width=1200 height=600></canvas>
 		<button id="playBtn">Play</button>
+		<button id="stopBtn">Stop</button>
 		<script type="text/javascript">
 		//Chris_Zabriskie_Cylinder_One.mp3 from http://freemusicarchive.org
 
@@ -37,9 +38,12 @@
 		}
 
 		var sound, source;
+		var startOffset = 0;
+		var startTime = 0;
+
         var canvas = document.getElementById('canvas');
 		var ctx = canvas.getContext('2d');
-		var gradient = ctx.createLinearGradient(0,0,0,130);
+		var gradient = ctx.createLinearGradient(0,0,0,800);
 	    gradient.addColorStop(1,"#fdd49e");
 	    gradient.addColorStop(0.75,"#fc8d59");
 	    gradient.addColorStop(0.25,"#d7301f");
@@ -59,6 +63,7 @@
 			    context.decodeAudioData(request.response, function(theBuffer) {
 			    sound = theBuffer;
 			    $("#playBtn").on("click", function(){play(sound)});
+			    // $("#stopBtn").on("click", function(){pausePlay()});
 			  }, onError);
 			}
 			request.send();
@@ -68,32 +73,33 @@
 			source = context.createBufferSource();
 			source.connect(context.destination);
 
-			javascriptNode = context.createScriptProcessor(2048,2,1);
+			javascriptNode = context.createScriptProcessor(2048,1,1);
 			javascriptNode.connect(context.destination);
 
 			analyser = context.createAnalyser();
-			analyser.fftsize = 1024;
+			analyser.fftsize = 512;
 			analyser.smoothingTimeConstant = 0.3;
 
-			analyser2 = context.createAnalyser();
-			analyser2.fftsize = 1024;
-			analyser2.smoothingTimeConstant = 0;
-
-			splitter = context.createChannelSplitter();
-
-			source.connect(splitter);
-			splitter.connect(analyser, 0,0);
-			splitter.connect(analyser2, 1,0)
-
-			// source.connect(analyser);
+			source.connect(analyser);
 			// analyser.connect(javascriptNode);
-			analyser.connect(javascriptNode,0,0);
-			analyser2.connect(javascriptNode,0,1);
+			analyser.connect(javascriptNode);
+			// analyser2.connect(javascriptNode,0,1);
 		}
 
+
 		function play(buffer){
+			// source = context.createBufferSource();
+			// source.connect(context.destination);
+
+
+			// startTime = context.getCurrentTime; 
 			source.buffer= buffer;
+			// source.buffer = this.buffer;
+		    // source.loop = true;
 			source.start(0);
+			// source.start(0, startOffset % buffer.duration);
+
+
 
 		}
 
@@ -108,17 +114,18 @@
 			var array = new Uint8Array(analyser.frequencyBinCount);
 			analyser.getByteFrequencyData(array);
 
-			var array2 = new Uint8Array(analyser2.frequencyBinCount);
-			analyser2.getByteFrequencyData(array2);
+			// var freqDomain = new Float32Array(analyser.frequencyBinCount);
+			// analyser.getFloatFrequencyData(freqDomain);
 
-			var averageVol2 = getAverageVolume(array2);
+
+
 			var averageVol = getAverageVolume(array);
 
-			ctx.clearRect(0, 0, 60, 130);
+			ctx.clearRect(0, 0, 1200, 500);
 			ctx.fillStyle = gradient;
 
-			ctx.fillRect(0,130-averageVol,25,130);
-			ctx.fillRect(30,130-averageVol2,25,130);
+			drawSpectrum(array);
+			// drawSpectrum2(freqDomain)
 
 
 		}
@@ -138,6 +145,34 @@
 
 		function pausePlay(){
 			source.stop();
+			// Measure how much time passed since the last pause.
+		   startOffset += context.currentTime - startTime;
+		}
+
+		function drawSpectrum(array){
+			var fullHeight = analyser.maxDecibels - analyser.minDecibels;
+			// console.log(fullHeight)
+			
+			for (var i =0; i<array.length; i++){
+				
+				var value = array[i];
+				// console.log(value)
+				var percent = value/256;
+				var percent2 = - value/fullHeight
+				var valueToPlot = percent * 500
+				ctx.fillRect(i*5, 600-valueToPlot, 3, valueToPlot);
+			}
+		}
+
+		function drawSpectrum2(array){
+			
+			for (var i =0; i<array.length; i++){
+				var value = Math.abs(array[i]);
+				// var percent = value/fullHeight *0.2;
+				// console.log(valueToPlot)
+				// var valueToPlot = value
+				ctx.fillRect(i*5, 500-value, 3, value);
+			}
 		}
 
 
