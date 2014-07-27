@@ -28,74 +28,187 @@
 
 	    });
 
-	    $("#parseFile").on("click", parseFile)
+	    
 
 	    var bookmarkArray = [];
 
-	    //just making sure that stuff are jQuery objects before working on them => ie convertToJQuery!
-	    function cToJQ(node){
-	    	if (node instanceof jQuery){
-	    		nodeNew = node
-	    	}
-	    	else {
-	    		nodeNew = $(node)
-	    	}
-			return nodeNew
-		}
-
-	    function parseFile(tree){
-	    	var bookmarkTree = tree.find('dt')
-	    	for (var i = 0; i<bookmarkTree.length; i++){
-	    		if (tree[i] instanceof jQuery){
-		    		tree[i] = tree[i]
+	    var bookmarkParser = {
+	    	cToJQ: function(node){
+		    	if (node instanceof jQuery){
+		    		nodeNew = node
 		    	}
 		    	else {
-		    		tree[i] = $(tree[i])
+		    		nodeNew = $(node)
+		    	}
+				return nodeNew
+			},
+
+			
+
+			parseNode: function(input, tags){
+		    	var node = bookmarkParser.cToJQ(input)
+
+
+		    	var nodeArray = node.find('dt');
+
+
+		    	if (nodeArray.length >0){
+		    		for (var j = 0; j<nodeArray.length; j++) {
+		    			// var tags = [];
+		    			var dataToParse = bookmarkParser.cToJQ(nodeArray[j]);
+		    			var tag = dataToParse.find('h3').text().trim();
+		    			// tags.push(tag)
+
+		    			bookmarkParser.parseNode(dataToParse)
+
+		    		}
 		    	}
 
-	    		// var tags = [];
-	    		// tags.push(tree[i].find('h3'))
-	    		// parseNode(tree[i])
-	    	}
-	    }
-		// function parseNode(node, tags){
-	    function parseNode(input){
-	    	var node = cToJQ(input)
+		    	else {
+		    		bookmarkParser.parseIndividual(node, tags);
+		    	}
 
-	    	var nodeArray = node.find('dt');
+		    },
 
+		    parseNode2: function(input, tags){ //assume no further subnodes
+		    	var node = bookmarkParser.cToJQ(input);
 
-	    	if (nodeArray.length >0){
-	    		for (var j = 0; j<nodeArray.length; j++) {
-	    			var tags = [];
-	    			var dataToParse = cToJQ(nodeArray[j]);
-	    			var tag = dataToParse.find('h3').text().trim();
-	    			tags.push(tag)
+		    	var bookmarkNode = node.find('dt')
 
-	    			parseNode(dataToParse)
+		    	var bookmarkTags = tags || '';
+		    	
 
-	    		}
-	    	}
+		    	
+		    	if(bookmarkNode.length > 0) {
+					//if there's a title, add it to the list of tags
+					for (var j = 0; j< bookmarkNode.length; j++){
+						var title = node.find('h3').text();
+						if(title) {
+							bookmarkTags += title + ', ';
+						}
+						bookmarkParser.parseTree(bookmarkNode[i], bookmarkTags);
+					}
+				}
+				else {
+					bookmarkParser.parseIndividual2(node, tags);
+				}
 
-	    	else {
-	    		parseIndividual($(node, tags));
-	    	}
+		    },
 
-	    }
+		    parseTree: function(input, tags){
+				var a = tags || '';
+				var bookmark;
 
-	    function parseIndividual(input, tags){
-	    	var el = cToJQ(input)
-	    	// function parseIndividual(el, tags){
-	    	var bookmark= {
-		    	"bookmark_url" : el.find('a').prop('href'),
-		    	"bookmark_title": el.text().trim(),
-		    	"bookmark_created": Math.round(Date.now()/1000),
-		    	"bookmark_modified": Math.round(Date.now()/1000),
-		    	"bookmark_tags" : tags
+				var dataToParse = bookmarkParser.cToJQ(input);
+				var tree = dataToParse.find('dt');
+
+				for (i = 0; i<tree.length; i++){
+					bookmark = bookmarkParser.parseNode2(tree[i], a);
+					// if (bookmark){
+					// 	bookmarkArray.push(bookmark)
+					// };
+				}
+
+			},
+
+		    
+
+		    parseIndividual: function(input, tags){
+		    	var el = bookmarkParser.cToJQ(input)
+		    	// function parseIndividual(el, tags){
+		    	var bookmark= {
+			    	"bookmark_url" : el.find('a').prop('href'),
+			    	"bookmark_title": el.text().trim(),
+			    	"bookmark_created": Math.round(Date.now()/1000),
+			    	"bookmark_modified": Math.round(Date.now()/1000),
+			    	"bookmark_tags" : tags
+			    }
+
+			    bookmarkArray.push(bookmark)
+		    },
+
+		    parseIndividual2: function(input, tags){
+		    	var el = bookmarkParser.cToJQ(input)
+		    	// function parseIndividual(el, tags){
+		    	var bookmark= {
+			    	"bookmark_url" : el.find('a').prop('href'),
+			    	"bookmark_title": el.text().trim(),
+			    	"bookmark_created": Math.round(Date.now()/1000),
+			    	"bookmark_modified": Math.round(Date.now()/1000),
+			    	"bookmark_tags" : tags
+			    }
+
+			    bookmarkArray.push(bookmark);
 		    }
-
-		    bookmarkArray.push(bookmark)
 	    }
+
+	    $("#parseFile").on("click", function(){
+	    	bookmarkParser.parseTree($("#displayArea"))})
+
+	    //just making sure that stuff are jQuery objects before working on them => ie convertToJQuery!
+	 //    function cToJQ(node){
+	 //    	if (node instanceof jQuery){
+	 //    		nodeNew = node
+	 //    	}
+	 //    	else {
+	 //    		nodeNew = $(node)
+	 //    	}
+		// 	return nodeNew
+		// }
+
+	 //    function parseFile(tree){
+	 //    	var bookmarkTree = tree.find('dt')
+	 //    	for (var i = 0; i<bookmarkTree.length; i++){
+	 //    		if (tree[i] instanceof jQuery){
+		//     		tree[i] = tree[i]
+		//     	}
+		//     	else {
+		//     		tree[i] = $(tree[i])
+		//     	}
+
+	 //    		// var tags = [];
+	 //    		// tags.push(tree[i].find('h3'))
+	 //    		// parseNode(tree[i])
+	 //    	}
+	 //    }
+		// // function parseNode(node, tags){
+	 //    function parseNode(input){
+	 //    	var node = cToJQ(input)
+
+	 //    	var nodeArray = node.find('dt');
+
+
+	 //    	if (nodeArray.length >0){
+	 //    		for (var j = 0; j<nodeArray.length; j++) {
+	 //    			var tags = [];
+	 //    			var dataToParse = cToJQ(nodeArray[j]);
+	 //    			var tag = dataToParse.find('h3').text().trim();
+	 //    			tags.push(tag)
+
+	 //    			parseNode(dataToParse)
+
+	 //    		}
+	 //    	}
+
+	 //    	else {
+	 //    		parseIndividual($(node, tags));
+	 //    	}
+
+	 //    }
+
+	 //    function parseIndividual(input, tags){
+	 //    	var el = cToJQ(input)
+	 //    	// function parseIndividual(el, tags){
+	 //    	var bookmark= {
+		//     	"bookmark_url" : el.find('a').prop('href'),
+		//     	"bookmark_title": el.text().trim(),
+		//     	"bookmark_created": Math.round(Date.now()/1000),
+		//     	"bookmark_modified": Math.round(Date.now()/1000),
+		//     	"bookmark_tags" : tags
+		//     }
+
+		//     bookmarkArray.push(bookmark)
+	 //    }
 
 
 
