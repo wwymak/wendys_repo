@@ -1,0 +1,194 @@
+<!DOCTYPE HTML>
+<html>
+    <head>
+    	<script type="text/javascript" src= "js/jquery-1.10.2.min.js"></script>
+    </head>
+    <body>
+    	<div id="testContainer"></div>
+    	<!-- <input id="myfiles" type="file">-->
+    	<button id="parseFile">Parse</button>
+    	<div id="displayArea">
+		    	<DT><H3 FOLDED>suject resource</H3>
+			<DL><p>
+				<!-- Node -->
+				<DT><!-- individual --><A HREF="http://arxiv.org/">arXiv.org e-Print archive</A>
+				<DT><A HREF="http://www.phy.cam.ac.uk/teaching/">Department of Physics, Cavendish Laboratory</A>
+				<!-- subTree -->
+				<DT><H3 FOLDED>latex</H3>
+					<DL><p>
+						<!-- subTree Node -->
+						<DT><A HREF="http://www.andy-roberts.net/misc/latex/index.html">Getting to Grips with Latex</A>
+						<DT><A HREF="http://www.eng.cam.ac.uk/help/tpl/textprocessing/teTeX/latex/latex2e-html/ltx-2.html">Help On LaTeX Commands</A>
+						<DT><A HREF="http://www.tug.org/mactex/">MacTeX - TeX Users Group</A>
+						<DT><A HREF="http://www.ctan.org/tex-archive/info/lshort/english/lshort.pdf">http://www.ctan.org/tex-archive/info/lshort/english/lshort.pdf</A>
+						<DT><A HREF="http://detexify.kirelabs.org/classify.html">Detexify LaTeX handwritten symbol recognition</A>
+						<DT><A HREF="http://detexify.kirelabs.org/classify.html">Detexify LaTeX handwritten symbol recognition</A>
+					</DL><p>
+				<DT><A HREF="http://www.scilab.org/">Scilab Home Page</A>
+				<DT><A HREF="http://wiki.octave.org/">Octave Wiki</A>
+				<DT><A HREF="http://www.cl.cam.ac.uk/teaching/0708/FoundsProg/notes.html">Foundations of Programming in Java</A>
+				<DT><A HREF="http://www.autodesk.co.uk/adsk/servlet/index?siteID=452932&id=13293140">Autodesk - Education</A>
+				<DT><A HREF="http://www-h.eng.cam.ac.uk/help/tpl/textprocessing/ThesisStyle/">PhD/MPhil Thesis - a LaTeX Template</A>
+			</DL><p>
+		</div>
+
+    	<script>
+    	var inputData = $("#displayArea")
+
+
+	    var bookmarkArray = [];
+
+	    var bookmarkParser = {
+	    	tagList: [],
+
+	    	cToJQ: function(node){
+		    	if (node instanceof jQuery){
+		    		nodeNew = node
+		    	}
+		    	else {
+		    		nodeNew = $(node)
+		    	}
+				return nodeNew
+			},
+
+
+
+
+
+
+
+		    parseTree: function(input, tags){
+		    	if (tags && tags.length >0){
+		    		var tagList = tags
+		    	}
+		    	else {
+		    		tagList = []
+		    	}
+		    	var dataToParse = bookmarkParser.cToJQ(input);
+
+		    	var tree = dataToParse.children('dt');
+		    	console.log(tree)
+
+		    	if(tree.length > 0){
+			    	for (var i = 0; i< tree.length; i++){
+			    		var treeData = bookmarkParser.cToJQ(tree[i]);
+			    		// if (treeData)
+			    		// if (tree[i].hasChildNodes('dl')){
+			    			tagList.push(treeData.children('h3').text())
+			    			bookmarkParser.parseNode(treeData.children('dl'), tagList);
+			    		}
+			   //  		else {
+						// 	bookmarkParser.parseIndividual(treeData, tagList);
+						// }
+
+			    	}
+
+
+			    else{
+			    	bookmarkParser.parseIndividual(dataToParse, tagList);
+			    }
+
+
+
+
+			},
+
+			parseNode: function(input, tags){
+				console.log(input)
+		    	var node = bookmarkParser.cToJQ(input)
+
+
+		    	var nodeArray = node.children('dt');
+		    	console.log(nodeArray[2])
+
+		    	for (var k = 0; k< nodeArray.length; k++){
+		    		bookmarkParser.parseTree(nodeArray[k], tags);
+
+
+		    	}
+
+
+
+		    	// if (nodeArray.length >0){
+		    	// 	for (var j = 0; j<nodeArray.length; j++) {
+		    	// 		// var tags = [];
+		    	// 		var dataToParse = bookmarkParser.cToJQ(nodeArray[j]);
+		    	// 		var tag = dataToParse.find('h3').text().trim();
+		    	// 		// tags.push(tag)
+
+		    	// 		bookmarkParser.parseNode(dataToParse)
+
+		    	// 	}
+		    	// }
+
+		    	// else {
+		    	// 	bookmarkParser.parseIndividual(node, tags);
+		    	// }
+
+		    },
+
+
+
+		    parseIndividual: function(input, tags){
+		    	var el = bookmarkParser.cToJQ(input)
+		    	// function parseIndividual(el, tags){
+		    	var bookmark= {
+			    	"bookmark_url" : el.find('a').prop('href'),
+			    	"bookmark_title": el.text().trim(),
+			    	"bookmark_created": Math.round(Date.now()/1000),
+			    	"bookmark_modified": Math.round(Date.now()/1000),
+			    	"bookmark_tags" : tags
+			    }
+
+			    bookmarkArray.push(bookmark)
+		    },
+
+		    processBookmarkTree: function(tree, tags){
+
+				var a = tags || '',
+				bookmark;
+		//Loop over the bookmarks tree and process each subTree
+				for (var i=0, l = tree.length; i < l; i++) {
+					console.log(tree[i])
+					bookmark = bookmarkParser.processNode(bookmarkParser.cToJQ(tree[i]), a.slice());
+					//only push to bookmark the data with an url as Chrome also return a folder as bookmark item
+					// if(bookmark && bookmark.children('a') ) {
+					// 	bookmarkParser.bookmarkAll.push(bookmark);
+
+					// }
+				}
+			},
+	//and get down to the final nodes (ie bookmarks) within the tree
+	processNode: function(input, tags) {
+		console.log(input)
+		var bookmarkTags = tags || '',
+			title;
+
+		var bookmarkNode = bookmarkParser.cToJQ(input)
+		var bmnChildren = bookmarkNode.children('dl')
+
+
+		if (bookmarkNode.children('a').length > 0){
+			console.log(bookmarkNode.children('a')[0])
+			bookmarkParser.parseIndividual(bookmarkNode, tags);
+		}
+
+		else {
+			bookmarkParser.processBookmarkTree(bookmarkNode.children(), bookmarkTags);
+		}
+
+
+	},
+
+
+	    }
+
+	    $("#parseFile").on("click", function(){
+	    	bookmarkParser.processBookmarkTree(inputData.children('dt'))
+		    console.log(bookmarkArray)})
+
+
+
+
+    </script></body>
+</html>
