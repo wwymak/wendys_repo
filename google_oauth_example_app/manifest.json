@@ -1,0 +1,27 @@
+{
+    "name": "Test with OAuth",
+    "version": "0.0.3",
+    "manifest_version": 2,
+    
+    "oauth2": {
+        "client_id": "1997",
+        "scopes": ["https://www.strava.com/oauth/authorize"]
+    },
+    "app": {
+        "background": {
+            "scripts": ["js/background.js"]
+        }
+    },
+    "icons": {
+        "128": "Bicycle-icon-128px.png"
+    },
+    "key": "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAgFmSuReLKoBV5AoE9/z2nl5HFxAN74THXgYgNx0AUUGuOIE6MruQhOSdduoOSk/3+3sQWw/O1iRxs032uPo0Ouo2Ljy4wLkhQWHqkLq1lOwGpsaXTHApbQzs1pBgOUbG6IoIi//NvXY6H2yjgWII0CJuJjepiLpRI0ilCXfqz32oLu/b2ioV5aaJpe8EO8rzijwT6qROVsObMwrKSNClN+AgrZkMCTeRH8kFGLCJzD5/3qykTwX3gUPv8HLGaq45t4Yg3L1TMDFgvhyDfPn9w6B0OZ2QTUbsVLadTGFvXP7ioinbXXBzxDS4IuaJUumaVHYQ63z6xoVGxSVHJzu5sQIDAQAB",
+
+    "permissions": [
+        "identity",
+        "<all_urls>",
+        "http://*/*",
+        "https://*/*",
+        "chrome://favicon/"
+    ]
+}
