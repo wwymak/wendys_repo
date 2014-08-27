@@ -1,3 +1,7 @@
+// var accdessToken = "c94b2cb98968485fb570b88cce4132736914b595"
+
+
+var storage = chrome.storage.local;
 
 var oauth = function(){
 
@@ -55,7 +59,7 @@ var oauth = function(){
             }
 
             function handleResponse(values){
-                    console.log(values)
+                console.log(values)
 
                 if(values.hasOwnProperty("code")){
                     exchangeCodeForToken(values.code);
@@ -78,6 +82,7 @@ var oauth = function(){
             function setAccessToken(token){
                 access_token = token; 
                 console.log('Setting access_token: ', access_token);
+                storage.set("accessToken", token);
             }
 
             function exchangeCodeForToken(code){
@@ -94,7 +99,10 @@ var oauth = function(){
                     },
 
                     'success' : function(response) {
-                        console.log(response)
+                        console.log(response);
+                        storage.set({"accessToken": response.access_token});
+                        storage.set({"tokenType": response.token_type})
+                        storage.set({"usrDetails": response.athlete})
                         /* Example of successful response
                         Object {access_token: "c94b2cb98968485fb570b88cce4132736914b595", token_type: "Bearer", athlete: Object}
                         access_token: "c94b2cb98968485fb570b88cce4132736914b595"
@@ -142,8 +150,106 @@ var oauth = function(){
         removeCachedToken: function(token_to_remove) {
             if (access_token == token_to_remove)
             access_token = null;
+        },
+
+        openDataView: function(){
+            
+            chrome.app.window.create('../dataView.html', {
+                id: "StravaDataView",
+                //probably should design it to be more responsive so this doesn't matter. leave for now
+                bounds: {
+                    width: 800,
+                    height: 800
+                }
+            });
+
         }
+
+        
     }
  
 
+}
+
+var getData = {
+    getAthleteKOM: function(){
+        storage.get(["usrDetails", "accessToken"], function(response){
+            console.log(response)
+            var athlete = response.usrDetails;
+            var id = athlete.id;
+            var accessToken = response.accessToken;
+
+            var url = "https://www.strava.com/api/v3/athletes/" + id.toString() + "/koms";
+            var headerName = "Bearer " + accessToken; 
+
+            $.ajax({
+                'url' : url,
+                'type' : 'GET',
+                'headers': {
+                    "Authorization" : headerName
+                },
+
+                'success' : function(response) {
+                    console.log(response);
+                    
+
+                },
+                'error' : function(response){
+                    console.error(response);
+                }
+            });
+        })
+
+    },
+
+    getAthleteActivities: function(dateStart, dateEnd){
+        var url = "https://www.strava.com/api/v3/athlete/activities";
+        storage.get("accessToken", function(response){
+            var accessToken = response.accessToken; 
+            console.log("accessToken is", accessToken);
+            var headerName = "Bearer " + accessToken; 
+            var activityData = []
+            function request(i){
+
+                $.ajax({
+                    'url' : url,
+                    'type' : 'GET',
+                    'headers': {
+                        "Authorization" : headerName
+                    },
+                    'data': {
+                        "before": dateEnd, //in seconds
+                        "after": dateStart,
+                        "page": i
+                    },
+
+                    'success' : function(response) {
+                        console.log(response);
+                        if (response.length == 30){
+                            response.forEach(function(item){
+                                activityData.push(item)
+                            });
+                            request(i+1);
+                        }
+                        else if (response.length < 30){
+                            response.forEach(function(item){
+                                activityData.push(item)
+                            });
+                            console.log(activityData);
+                            storage.set({"activityData": activityData})
+                            
+                        }
+                        
+
+                    },
+                    'error' : function(response){
+                        console.error(response);
+                    }
+                });
+            }
+            request(1);
+        });
+    }
+        
+ 
 }
