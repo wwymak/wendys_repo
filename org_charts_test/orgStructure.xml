@@ -1,0 +1,28 @@
+<people>
+	<person name="Patricia Yates" title="Director, Strategy and Communications" ID="1384" role="permanent" image="../images/testProfilePics/Ants-cube.png">
+		<person name="David Bishop" title="Head of Strategy" ID="2336" role="permanent" image="../images/testProfilePics/Arrow-Cube.png">
+			<person name="Julian Winkworth" title="Senior Tourism Affairs Executive" ID="2376" role="fixed term contract" image="../images/testProfilePics/Bat-cube.png"/>
+			<person name="Simone Duberry" title="Manager Market Planning and Competitiveness" ID="2428" role="permanent" image="../images/testProfilePics/Blue-cube.png"/>
+		</person>
+		
+		<person name="Shivah Jahangir Tafreshi" title="Head of Communications" ID="1510" role="permanent" image="../images/testProfilePics/Cherry-Desert.png">
+			<person name="Charlotte Kirkby" title="Senior Communications Executive" ID="2490" role="fixed term contract" image="../images/testProfilePics/Chocolate-cube.png"/>
+			<person name="Laura Holborow" title="Senior Communications Executive" ID="2125" role="permanent" image="../images/testProfilePics/Chocolate-Ice-Cream.png"/>
+		</person>
+		
+		<person name="David Edwards" title="Head of Research and Forecasting" ID="1494" role="permanent" image="../images/testProfilePics/Cube-With-Pins.png">
+			<person name="Jo Knudsen" title="Market Intelligence Specialist" ID="2540" role="fixed term contract" image="../images/testProfilePics/Desert-cube.png"/>
+			<person name="Christy Heir" title="Research and Evaluation Specialist" ID="2358" role="permanent" image="../images/testProfilePics/Desert-yellow.png"/>
+			<person name="Mark McFee" title="Market Intelligence Executive" ID="2384" role="permanent" image="../images/testProfilePics/Energy-Cube.png"/>
+			<person name="Ana-Maria Achiriloaie" title="Research and Evaluation Specialist (GREAT)" ID="2542" role="fixed term contract" image="../images/testProfilePics/Fruit-Ice-Cream.png"/>
+		</person>
+		
+		<person name="David Leslie" title="Corporate PR Manager" ID="2383" role="permanent" image="../images/testProfilePics/Golden-cube.png">
+			<person name="Mark Di-Toro" title="Acting Corporate PR Manager" ID="1932" role="permanent" image="../images/testProfilePics/Lemon-Ice-Cream.png">
+				<person name="Sarah Runnacles" title="Press Officer" ID="24512" role="fixed term contract" image="../images/testProfilePics/Sailor-cube.png"/>
+			</person>
+			
+		</person>
+	</person>
+
+</people>
