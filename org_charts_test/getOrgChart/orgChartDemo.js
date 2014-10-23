@@ -2,7 +2,7 @@
 $("#organisationChart").getOrgChart({		
 	theme: "deborah",
 	color: "blue",
-	zoomable: false,
+	zoomable: true,
 	linkType: "M",
 	gridView: true,
 	primaryColumns: ["name", "title"],

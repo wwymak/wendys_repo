@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<script type="text/javascript" src="../js/jquery-1.11.1.min.js"></script>
+		<script type="text/javascript" src="../js/jquery-ui.min.js"></script>
+		<script type="text/javascript" src="../js/jquery.orgchart.min.js"></script>
+		<link href="../css/jquery.orgchart.css" rel="stylesheet" />
+		<style type="text/css">
+		div.orgChart div.node.permanent {
+		    background-color: white !important;
+		}
+		div.orgChart div.node.fixed_term_contract {
+		    background-color: #d9ada0 !important;
+		}
+		/*div.orgChart div.node.permanent {
+		    background-color: white !important;
+		}
+		div.orgChart div.node.permanent {
+		    background-color: white !important;
+		}*/ /*{
+			font-size: 14px;
+			background-color: #e1f2ff;
+			border-radius: 8px;
+			border: 5px solid black;
+			-moz-border-radius: 8px;
+		}*/
+
+		</style>
+		
+	</head>
+	<body>
+		<!-- xml structure start -->
+		<people>
+			<person name="Patricia Yates" title="Director, Strategy and Communications" ID="1384" role="permanent" image="../images/testProfilePics/Ants-cube.png">
+				<person name="David Bishop" title="Head of Strategy" ID="2336" role="permanent" image="../images/testProfilePics/Arrow-Cube.png">
+					<person name="Julian Winkworth" title="Senior Tourism Affairs Executive" ID="2376" role="fixed_term_contract" image="../images/testProfilePics/Bat-cube.png"></person>
+					<person name="Simone Duberry" title="Manager Market Planning and Competitiveness" ID="2428" role="permanent" image="../images/testProfilePics/Blue-cube.png"></person>
+				</person>
+				
+				<person name="Shivah Jahangir Tafreshi" title="Head of Communications" ID="1510" role="permanent" image="../images/testProfilePics/Cherry-Desert.png">
+					<person name="Charlotte Kirkby" title="Senior Communications Executive" ID="2490" role="fixed_term_contract" image="../images/testProfilePics/Chocolate-cube.png"></person>
+					<person name="Laura Holborow" title="Senior Communications Executive" ID="2125" role="permanent" image="../images/testProfilePics/Chocolate-Ice-Cream.png"></person>
+				</person>
+				
+				<person name="David Edwards" title="Head of Research and Forecasting" ID="1494" role="permanent" image="../images/testProfilePics/Cube-With-Pins.png">
+					<person name="Jo Knudsen" title="Market Intelligence Specialist" ID="2540" role="fixed_term_contract" image="../images/testProfilePics/Desert-cube.png"></person>
+					<person name="Christy Heir" title="Research and Evaluation Specialist" ID="2358" role="permanent" image="../images/testProfilePics/Desert-yellow.png"></person>
+					<person name="Mark McFee" title="Market Intelligence Executive" ID="2384" role="permanent" image="../images/testProfilePics/Energy-Cube.png"></person>
+					<person name="Ana-Maria Achiriloaie" title="Research and Evaluation Specialist (GREAT)" ID="2542" role="fixed_term_contract" image="../images/testProfilePics/Fruit-Ice-Cream.png"></person>
+				</person>
+				
+				<person name="David Leslie" title="Corporate PR Manager" ID="2383" role="permanent" image="../images/testProfilePics/Golden-cube.png">
+					<person name="Mark Di-Toro" title="Acting Corporate PR Manager" ID="1932" role="permanent" image="../images/testProfilePics/Lemon-Ice-Cream.png">
+						<person name="Sarah Runnacles" title="Press Officer" ID="24512" role="fixed_term_contract" image="../images/testProfilePics/Sailor-cube.png"></person>
+					</person>
+					
+				</person>
+			</person>
+
+		</people>
+		<!--XML end -->
+
+		<div id="data"></div>
+		<div id="organisationChart"></div>
+		
+		<script type="text/javascript">
+
+			var xmlParser = {
+				str: "",
+				temp: "",
+				makeTree: function(){
+					xmlParser.createNestedTree($('people'));
+	            	$("#data").append(xmlParser.str);
+	            	$('#data > ul').attr('id', 'orgData');
+	            	$("#data").hide();
+				},
+
+				createNestedTree: function(obj){
+					xmlParser.str += '<ul>'; 
+		            var children = obj.children();        
+		            if(children.size() != 0) {
+		                $.each(children, function (index, value) {
+		                    var $value = $(value);
+		                    xmlParser.str += '<li ' + 'class="' + $value.attr('role') + '">' + $value.attr('name');
+		                    xmlParser.createNestedTree($value);
+		                    xmlParser.str += '</li>';
+		                })
+		            }
+		            xmlParser.str += '</ul>';     
+		        
+				}
+			}
+
+
+			$(document).ready(function(){
+				xmlParser.makeTree();
+				$('#orgData').orgChart({
+					container: $('#organisationChart'),
+					interactive: true,
+					copyTitle: true,
+					copyClasses: true
+				})
+			});
+
+	    </script>
+	</body>
+</html>
