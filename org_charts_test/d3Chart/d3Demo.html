@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<script type="text/javascript" src="../js/jquery-1.11.1.min.js"></script>
+		<script type="text/javascript" src="../js/d3.min.js"></script>
+		<script type="text/javascript" src="orgData.js"></script>
+		<style type="text/css">
+		.link {
+			fill: none; 
+			stroke: #ccc; 
+			stroke-width: 2px;
+		}
+
+		.node circle { 
+			fill: #fff; 
+			stroke: steelblue; 
+			stroke-width: 3px;
+		}			
+		</style>
+	</head>
+	<body>
+		<div id="organisationChart"></div>
+		<script type="text/javascript">
+
+		var orgchart = {
+			margin: {top: 30, right: 320, bottom: 10, left: 30},
+			// width: 960 - orgchart.margin.left - orgchart.margin.right,
+   //  		height: 500 - orgchart.margin.top - orgchart.margin.bottom,
+
+    		width: $(window).width(),
+    		height: $(window).height(),
+
+    		// svg: null,
+
+    		tree: d3.layout.tree(),
+
+    		chartDraw: function () {
+    			var i = 0;
+    			var svg = d3.select('#organisationChart').append('svg')
+    					.attr('width', orgchart.width).attr('height', orgchart.height)
+    					.append("g")
+        				.attr("transform", "translate(" + orgchart.margin.left + "," + orgchart.margin.top + ")");
+
+        		orgchart.tree.size([orgchart.height, orgchart.width]);
+
+        		orgchart.diagonal = d3.svg.diagonal() .projection(function(d) { return [d.x, d.y]; });
+
+        		var dataNodes = orgchart.computeNodes();
+
+        		console.log(dataNodes);
+
+        		var maxDepth = d3.max(dataNodes, function(d){return d.depth});
+        		console.log(maxDepth);
+
+        		var ySpacing = 0.8 * orgchart.height/maxDepth
+
+
+
+        		dataNodes.forEach(function(d) { d.y = d.depth * ySpacing; });
+
+        		var node = svg.selectAll("g.node")
+      				.data(dataNodes, function(d) { return d.id || (d.id = ++i); });
+
+				var allLinks = orgchart.tree.links(dataNodes);
+
+      			var nodeEnter = node.enter().append("g")
+								      .attr("class", "node")
+								      .attr("transform", function(d) { return "translate(" + d.x + "," + d.y + ")"; })
+								      .on("click", click);
+				nodeEnter.append("circle")
+				        	.attr("r", 10)
+				            .style("fill", "#fff");
+
+				var link = svg.selectAll("path.link").data(allLinks, function(d) { return d.target.id; }).enter().insert("path", "g").attr("class", "link").attr("d", orgchart.diagonal)
+
+				function click(){
+
+				}
+
+
+
+        		// svg.selectAll('path').data(dataNodes).enter()
+        		// 	.append('path').attr('d',orgchart.diagonal);
+
+
+    		},
+
+    		computeNodes: function(){
+    			orgchart.tree.children(function(d){return d.person});
+
+    			var nodes = orgchart.tree.nodes(orgData.person);
+
+    			console.log(nodes);
+    			return nodes
+    		}
+		}
+
+		$(document).ready(function(){
+
+			orgchart.chartDraw();
+		})
+
+		</script>
+	</body>
+</html>
