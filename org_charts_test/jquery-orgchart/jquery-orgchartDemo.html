@@ -111,7 +111,7 @@
 		                $.each(children, function (index, value) {
 		                    var $value = $(value);
 		                    xmlParser.str += '<li ' + 'class="big ' + $value.attr('role') + '"' //+ ' style="background-image: url(' + $value.attr('image') + ')"' + 
-		                    				+' data="' + $value.attr('image') + '"' + ' title="' + $value.attr('title') +'">' + $value.attr('name');
+		                    				+' data="' + $value.attr('ID') + '"' + ' title="' + $value.attr('title') +'">' + $value.attr('name');
 		                    xmlParser.createNestedTree($value);
 		                    xmlParser.str += '<br/>' + 
                 								'<img title="' + $value.attr('title') + '" src="' + $value.attr('image') + '"/>'
