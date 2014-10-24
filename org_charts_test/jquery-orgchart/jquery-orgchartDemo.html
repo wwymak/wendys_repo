@@ -3,15 +3,44 @@
 	<head>
 		<script type="text/javascript" src="../js/jquery-1.11.1.min.js"></script>
 		<script type="text/javascript" src="../js/jquery-ui.min.js"></script>
-		<script type="text/javascript" src="../js/jquery.orgchart.min.js"></script>
+		<script type="text/javascript" src="../js/jquery.orgchart.js"></script>
 		<link href="../css/jquery.orgchart.css" rel="stylesheet" />
 		<style type="text/css">
-		div.orgChart div.node.permanent {
+		/*div.orgChart div.node.permanent {
 		    background-color: white !important;
 		}
 		div.orgChart div.node.fixed_term_contract {
 		    background-color: #d9ada0 !important;
+		}*/
+
+		.permanent {
+		    background-color: white !important;
 		}
+		.fixed_term_contract {
+		    background-color: #d9ada0 !important;
+		}
+
+		div.orgChart div.node.big {
+            width: 150px;
+            height: 150px;
+        }
+
+        div.orgChart div.node.big img {
+            border: 2px solid black;
+            border-radius: 4px;
+            width: 50px;
+            height: 50px;
+            background-color: white;
+        }
+
+        p{
+        	font-size: 12px;
+        }
+
+        div.orgChart{
+        	background-color: transparent;
+        	border: none;
+        }
 		/*div.orgChart div.node.permanent {
 		    background-color: white !important;
 		}
@@ -64,7 +93,7 @@
 		<div id="organisationChart"></div>
 		
 		<script type="text/javascript">
-
+			//turn xml data into the nested HTML list required by the script
 			var xmlParser = {
 				str: "",
 				temp: "",
@@ -81,9 +110,15 @@
 		            if(children.size() != 0) {
 		                $.each(children, function (index, value) {
 		                    var $value = $(value);
-		                    xmlParser.str += '<li ' + 'class="' + $value.attr('role') + '">' + $value.attr('name');
+		                    xmlParser.str += '<li ' + 'class="big ' + $value.attr('role') + '"' //+ ' style="background-image: url(' + $value.attr('image') + ')"' + 
+		                    				+' data="' + $value.attr('image') + '"' + ' title="' + $value.attr('title') +'">' + $value.attr('name');
 		                    xmlParser.createNestedTree($value);
+		                    xmlParser.str += '<br/>' + 
+                								'<img title="' + $value.attr('title') + '" src="' + $value.attr('image') + '"/>'
+                			xmlParser.str += '<br/>' + 
+                								'<p>'+ $value.attr('title') + '</p>'
 		                    xmlParser.str += '</li>';
+		                    
 		                })
 		            }
 		            xmlParser.str += '</ul>';     
@@ -97,8 +132,10 @@
 				$('#orgData').orgChart({
 					container: $('#organisationChart'),
 					interactive: true,
+					copyStyles: true,
 					copyTitle: true,
-					copyClasses: true
+					copyClasses: true,
+					copyData: true
 				})
 			});
 
