@@ -1,0 +1,10 @@
+{
+  "appId": "tripplanner",
+  "apiKey": "679ffcb8e4fb35a8d5a8963bc9aaa6b95b267bdaa7553865e67d24d1037ce046",
+  "public": "./",
+  "ignore": [
+    "stamplay.json",
+    "**/.*",
+    "**/node_modules/**"
+  ]
+}
