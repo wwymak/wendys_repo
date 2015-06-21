@@ -1,0 +1,25 @@
+.layout-container {
+  position: absolute;
+  top: 50%;
+  margin-top: -172px;
+  width: 860px;
+  left: 50%;
+  right: 50%;
+  margin-left: -430px;
+  margin-right: -430px;
+}
+.form {
+  position: relative;
+  z-index: 0;
+}
+.text-center {
+  text-align: center;
+}
+.route-summary {
+  position: relative;
+  padding: 20px;
+}
+.route-summary .route-name {
+  font-size: 17px;
+  color: #6f6f6f;
+}
