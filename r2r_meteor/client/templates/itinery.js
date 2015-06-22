@@ -14,7 +14,13 @@ Template.body.events({
     'blur #fromInput': function(event){
         console.log($("#fromInput").val());
     },
+    'blur #toInput': function(event){
+        console.log($("#toInput").val());
+    },
     'submit #fromInput': function(event){
        event.preventDefault();
+    },
+    'submit #toInput': function(event){
+        event.preventDefault();
     }
 })
