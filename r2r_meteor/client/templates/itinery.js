@@ -2,17 +2,37 @@
  * Created by wwymak on 21/06/15.
  */
 
+var queryForRoutes = function(){
+    var fromDest = $("#fromInput").val();
+    var toDest = $("#toInput").val();
+    console.log(fromDest, toDest)
+    Meteor.call('getRoutes', fromDest, toDest, function(err, result){
+        console.log(result);
+        Session.set("r2rRoutesObj", result);
+    } );
+}
 Template.body.helpers({
     itineries:[
         {routeName: "Route 1"},
         {routeName: "Route 2"},
         {routeName: "Route 3"}
+    ],
+
+    routesNames : [
+        {routeName: "Route 1a"},
+        {routeName: "Route 2a"},
+        {routeName: "Route 3a"}
     ]
 });
 
 Template.body.events({
     'blur #fromInput': function(event){
-        console.log($("#fromInput").val());
+        queryForRoutes();
+        //console.log($("#fromInput").val());
+        //var fromDest = $("#fromInput").val();
+        //var toDest = $("#toInput").val();
+        ////if()
+        //Meteor.call('getRoutes', fromDest, toDest, function(err, result){console.log(result)} )
     },
     'blur #toInput': function(event){
         console.log($("#toInput").val());
@@ -23,4 +43,13 @@ Template.body.events({
     'submit #toInput': function(event){
         event.preventDefault();
     }
+});
+
+Template.routeList.helpers({
+    apiResult: function(){
+        return Session.get("r2rRoutesObj");
+    }
 })
+
+
+//Template.routeList.created()

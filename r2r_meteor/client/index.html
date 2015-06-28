@@ -13,11 +13,11 @@
           <form class="form-inline">
               <div class="form-group">
                   <label for="fromInput">From</label>
-                  <input type="text" class="form-control fromInput" id="fromInput" placeholder="From">
+                  <input type="text" class="form-control fromInput" id="fromInput" placeholder="From" value="London, UK">
               </div>
               <div class="form-group">
                   <label for="toInput">To</label>
-                  <input type="text" class="form-control" id="toInput" placeholder="To">
+                  <input type="text" class="form-control" id="toInput" placeholder="To" value="Paris, France">
               </div>
               <button>Search</button>
           </form>
@@ -30,10 +30,16 @@
   <div class="route-summary">
       <span class="label-route-number"></span>
       <div class="itinery-list">
-        {{#each itineries}}
-          {{> itinery}}
-        {{/each}}
+
+          {{#each itineries}}
+              {{> itinery}}
+          {{/each}}
+      </div>
+
+      <div class="itinery-list" id="route-list-from-api">
+          {{>routeList}}
       </div>
   </div>
+
 
 </body>

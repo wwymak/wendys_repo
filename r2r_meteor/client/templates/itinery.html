@@ -1,5 +1,34 @@
 <template name="itinery">
     <div class="route-summary">
+        {{#if loading}}
+            <div>Loading...</div>
+        {{/if}}
+        {{#if error}}
+            <div>Cannot get data...</div>
+        {{/if}}
+
         <div class="route-name">{{routeName}}</div>
     </div>
 </template>
+
+<template name="routeDetailed">
+    <div class="route-single">
+        <div class="route-name">{{name}}</div>
+        <div class="route-duration">{{duration}} mins</div>
+        <div class="route-price">{{indicativePrice.price}} {{indicativePrice.currency}}</div>
+    </div>
+</template>
+
+<template name="test">
+    <div>testing testing</div>
+</template>
+
+<template name="routeList">
+    <div>routes from api call</div>
+    {{#with apiResult}}
+        {{#each apiResult.routes}}
+            {{> routeDetailed}}
+        {{/each}}
+    {{/with}}
+</template>
+
