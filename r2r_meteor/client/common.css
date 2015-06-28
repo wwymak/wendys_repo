@@ -18,8 +18,21 @@
 .route-summary {
   position: relative;
   padding: 20px;
+  border: 1px solid grey;
 }
 .route-summary .route-name {
   font-size: 17px;
   color: #6f6f6f;
+}
+.route-summary .route-price {
+  position: absolute;
+  right: 12px;
+  bottom: 20px;
+}
+.route-summary .route-duration {
+  margin-top: 8px;
+  display: inline-block;
+}
+.route-pane {
+  width: 33%;
 }

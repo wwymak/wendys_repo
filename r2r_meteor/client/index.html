@@ -19,7 +19,7 @@
                   <label for="toInput">To</label>
                   <input type="text" class="form-control" id="toInput" placeholder="To" value="Paris, France">
               </div>
-              <button>Search</button>
+              <button id="routeSearchBtn">Search</button>
           </form>
 
       </div>
@@ -28,14 +28,6 @@
   </div>
 
   <div class="route-summary">
-      <span class="label-route-number"></span>
-      <div class="itinery-list">
-
-          {{#each itineries}}
-              {{> itinery}}
-          {{/each}}
-      </div>
-
       <div class="itinery-list" id="route-list-from-api">
           {{>routeList}}
       </div>

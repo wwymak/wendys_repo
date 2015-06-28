@@ -35,13 +35,17 @@ Template.body.events({
         //Meteor.call('getRoutes', fromDest, toDest, function(err, result){console.log(result)} )
     },
     'blur #toInput': function(event){
-        console.log($("#toInput").val());
+        queryForRoutes();
     },
     'submit #fromInput': function(event){
        event.preventDefault();
     },
     'submit #toInput': function(event){
         event.preventDefault();
+    },
+    'click #routeSearchBtn': function(event){
+        event.preventDefault();
+        queryForRoutes();
     }
 });
 
@@ -52,4 +56,9 @@ Template.routeList.helpers({
 })
 
 
-//Template.routeList.created()
+Template.routeList.rendered = function(){
+    $(document).ready(function(){
+        queryForRoutes();
+    })
+
+}

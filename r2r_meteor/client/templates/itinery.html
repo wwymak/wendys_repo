@@ -12,7 +12,7 @@
 </template>
 
 <template name="routeDetailed">
-    <div class="route-single">
+    <div class="route-summary">
         <div class="route-name">{{name}}</div>
         <div class="route-duration">{{duration}} mins</div>
         <div class="route-price">{{indicativePrice.price}} {{indicativePrice.currency}}</div>
@@ -24,11 +24,12 @@
 </template>
 
 <template name="routeList">
-    <div>routes from api call</div>
-    {{#with apiResult}}
-        {{#each apiResult.routes}}
-            {{> routeDetailed}}
-        {{/each}}
+    <div class="route-pane">
+        {{#with apiResult}}
+            {{#each apiResult.routes}}
+                {{> routeDetailed}}
+            {{/each}}
     {{/with}}
+    </div>
 </template>
 
