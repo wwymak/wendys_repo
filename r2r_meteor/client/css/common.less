@@ -43,3 +43,28 @@
 .route-pane{
   width: 33%;
 }
+
+.icon-transport{
+  //width: 101px;
+  //height: 102px;
+  width: 30px;
+  height: 30px;
+
+
+}
+
+.icon-car{
+  background: url('imgs/flat-travel-and-vacation-icon-set.png') no-repeat -19px -143px;
+  background-size:cover;
+  &:extend(.icon-transport);
+}
+
+.icon-plane{
+  background: url('imgs/flat-travel-and-vacation-icon-set.png') no-repeat -286px -143px;
+  &:extend(.icon-transport);
+}
+
+.icon-bus{
+  background: url('imgs/flat-travel-and-vacation-icon-set.png') no-repeat -419px -1077px;
+  &:extend(.icon-transport);
+}

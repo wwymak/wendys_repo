@@ -36,3 +36,20 @@
 .route-pane {
   width: 33%;
 }
+.icon-transport,
+.icon-car,
+.icon-plane,
+.icon-bus {
+  width: 30px;
+  height: 30px;
+}
+.icon-car {
+  background: url('imgs/flat-travel-and-vacation-icon-set.png') no-repeat -19px -143px;
+  background-size: cover;
+}
+.icon-plane {
+  background: url('imgs/flat-travel-and-vacation-icon-set.png') no-repeat -286px -143px;
+}
+.icon-bus {
+  background: url('imgs/flat-travel-and-vacation-icon-set.png') no-repeat -419px -1077px;
+}
