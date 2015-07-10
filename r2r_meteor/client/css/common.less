@@ -1,3 +1,46 @@
+@import url(http://fonts.googleapis.com/css?family=Roboto+Condensed:400,300,700);
+
+*{
+  font-family: 'Roboto Condensed', sans-serif;
+}
+//a = horizontal offset, b = vertical offset, c = blur radius, d = spread radius
+.shadow(@a, @b, @c, @d){
+  webkit-box-shadow: @a @b @c @d #ccc;  /* Safari 3-4, iOS 4.0.2 - 4.2, Android 2.3+ */
+  -moz-box-shadow:   @a @b @c @d #ccc;  /* Firefox 3.5 - 3.6 */
+  box-shadow:        @a @b @c @d #ccc;
+}
+
+.navbar-default{
+  .navbar-brand{
+    color: white;
+    &:hover, &:active, &:visited, &:focus{
+      color: inherit;
+    }
+  }
+
+  .navbar-nav{
+    li > a{
+      color: white;
+      &:hover, &:active, &:visited, &:focus{
+        color: inherit;
+      }
+    }
+  }
+
+
+}
+
+.header-bar{
+  background: royalblue;
+  color: white;
+  font-size: 1.6rem;
+  font-weight: bold;
+  position: relative;
+  min-height: 50px;
+  padding: 2.5px 10px;
+
+  .shadow(3px, 3px, 5px, 6px);
+}
 .layout-container{
   position: absolute;
   top: 50%;
@@ -16,6 +59,10 @@
 
 .text-center{
   text-align: center;
+}
+
+.route-container{
+  margin: 20px;
 }
 
 .route-summary{
@@ -67,4 +114,12 @@
 .icon-bus{
   background: url('imgs/flat-travel-and-vacation-icon-set.png') no-repeat -419px -1077px;
   &:extend(.icon-transport);
+}
+
+.layout-transparent {
+  //background: url('imgs/travelling.jpg') center / cover;
+  .mdl-layout__header{
+    color: white;
+    background: url('/assets/travelling.jpg') center / cover;
+  }
 }

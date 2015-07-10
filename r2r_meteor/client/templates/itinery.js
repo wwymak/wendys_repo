@@ -49,6 +49,30 @@ Template.body.events({
     }
 });
 
+Template.home.events({
+    'blur #fromInput': function(event){
+        queryForRoutes();
+        //console.log($("#fromInput").val());
+        //var fromDest = $("#fromInput").val();
+        //var toDest = $("#toInput").val();
+        ////if()
+        //Meteor.call('getRoutes', fromDest, toDest, function(err, result){console.log(result)} )
+    },
+    'blur #toInput': function(event){
+        queryForRoutes();
+    },
+    'submit #fromInput': function(event){
+        event.preventDefault();
+    },
+    'submit #toInput': function(event){
+        event.preventDefault();
+    },
+    'click #routeSearchBtn': function(event){
+        event.preventDefault();
+        queryForRoutes();
+    }
+});
+
 Template.routeList.helpers({
     apiResult: function(){
         return Session.get("r2rRoutesObj");

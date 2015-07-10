@@ -1,0 +1,59 @@
+<template name="aboutProject">
+    {{> headerBar}}
+    <div class="container">
+        <h2>About</h2>
+        <div>
+            This is a personal project to learn about Meteor. Eventually I am hoping this app will let you search
+            for routes from A to B, let you save route(s) to your user account, as well as a calendar function so
+            you can plan your trip.
+
+            Thanks to the guys at Rome2Rio for the great free api! Give them a visit at rome2rio.com
+        </div>
+    </div>
+
+</template>
+
+<template name="headerBar">
+    <nav class="navbar navbar-default header-bar">
+        <div class="container-fluid">
+            <!-- Brand and toggle get grouped for better mobile display -->
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <a class="navbar-brand" href="#">From A2B</a>
+            </div>
+
+            <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+
+                <ul class="nav navbar-nav navbar-right">
+                    <li><a href="/aboutProject">About</a></li>
+
+                </ul>
+            </div><!-- /.navbar-collapse -->
+        </div><!-- /.container-fluid -->
+    </nav>
+</template>
+
+<template name="headerBarMDL">
+    <div class="layout-transparent mdl-layout mdl-js-layout">
+        <header class="mdl-layout__header mdl-layout__header--transparent">
+            <div class="mdl-layout__header-row">
+                <!-- Title -->
+                <span class="mdl-layout-title">Title</span>
+                <!-- Add spacer, to align navigation to the right -->
+                <div class="mdl-layout-spacer"></div>
+                <!-- Navigation -->
+                <nav class="mdl-navigation">
+                    <a class="mdl-navigation__link" href="">Link</a>
+                    <a class="mdl-navigation__link" href="">Link</a>
+                    <a class="mdl-navigation__link" href="">Link</a>
+                    <a class="mdl-navigation__link" href="/aboutProject">About</a>
+                </nav>
+            </div>
+        </header>
+    </div>
+</template>

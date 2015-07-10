@@ -1,3 +1,39 @@
+@import url(http://fonts.googleapis.com/css?family=Roboto+Condensed:400,300,700);
+* {
+  font-family: 'Roboto Condensed', sans-serif;
+}
+.navbar-default .navbar-brand {
+  color: white;
+}
+.navbar-default .navbar-brand:hover,
+.navbar-default .navbar-brand:active,
+.navbar-default .navbar-brand:visited,
+.navbar-default .navbar-brand:focus {
+  color: inherit;
+}
+.navbar-default .navbar-nav li > a {
+  color: white;
+}
+.navbar-default .navbar-nav li > a:hover,
+.navbar-default .navbar-nav li > a:active,
+.navbar-default .navbar-nav li > a:visited,
+.navbar-default .navbar-nav li > a:focus {
+  color: inherit;
+}
+.header-bar {
+  background: royalblue;
+  color: white;
+  font-size: 1.6rem;
+  font-weight: bold;
+  position: relative;
+  min-height: 50px;
+  padding: 2.5px 10px;
+  webkit-box-shadow: 3px 3px 5px 6px #cccccc;
+  /* Safari 3-4, iOS 4.0.2 - 4.2, Android 2.3+ */
+  -moz-box-shadow: 3px 3px 5px 6px #cccccc;
+  /* Firefox 3.5 - 3.6 */
+  box-shadow: 3px 3px 5px 6px #cccccc;
+}
 .layout-container {
   position: absolute;
   top: 50%;
@@ -14,6 +50,9 @@
 }
 .text-center {
   text-align: center;
+}
+.route-container {
+  margin: 20px;
 }
 .route-summary {
   position: relative;
@@ -52,4 +91,8 @@
 }
 .icon-bus {
   background: url('imgs/flat-travel-and-vacation-icon-set.png') no-repeat -419px -1077px;
+}
+.layout-transparent .mdl-layout__header {
+  color: white;
+  background: url('/assets/travelling.jpg') center / cover;
 }
