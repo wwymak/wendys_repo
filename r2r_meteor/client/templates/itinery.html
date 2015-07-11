@@ -19,6 +19,16 @@
     </div>
 </template>
 
+<template name="routeCard">
+    <div class="mdl-card">
+        <div class="mdl-card__title">{{name}}</div>
+        <div class="mdl-card__supporting-text">
+            <div class="route-duration">{{duration}} mins</div>
+            <div class="route-price">{{indicativePrice.price}} {{indicativePrice.currency}}</div>
+        </div>
+    </div>
+</template>
+
 <template name="test">
     <div>testing testing</div>
 </template>
@@ -27,9 +37,27 @@
     <div class="route-pane">
         {{#with apiResult}}
             {{#each apiResult.routes}}
-                {{> routeDetailed}}
+                {{> routeCard}}
+                <!--{{> routeDetailed}}-->
             {{/each}}
-    {{/with}}
+        {{/with}}
     </div>
+</template>
+
+<template name="routeListMDL">
+    <nav class="mdl-navigation">
+        {{#with apiResult}}
+            {{#each apiResult.routes}}
+                {{> routeNav}}
+            {{/each}}
+        {{/with}}
+    </nav>
+</template>
+
+<template name="routeNav">
+    <a class="mdl-navigation__link">{{name}}</a>
+    <div class="route-name mdl-navigation__link">{{name}}</div>
+    <div class="route-duration">{{duration}} mins</div>
+    <div class="route-price">{{indicativePrice.price}} {{indicativePrice.currency}}</div>
 </template>
 

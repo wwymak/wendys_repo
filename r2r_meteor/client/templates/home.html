@@ -1,4 +1,5 @@
 <template name="home">
+
     {{> headerBarMDL}}
     <div class="container layout-container-search">
         <div class="">
@@ -19,10 +20,37 @@
 
 
     </div>
+    <div class="layout-transparent mdl-layout mdl-js-layout mdl-layout--fixed-drawer has-drawer">
+    <main class="mdl-layout__content">
+    <div class="mdl-layout__drawer">
+        <!--{{> routeListMDL}}-->
+    </div>
+    <!--<div class="container layout-container-search">-->
+        <!--<div class="">-->
+            <!--<p class="text-center">Find out how to get from A to B anywhere in the world</p>-->
+            <!--<form class="form-inline">-->
+                <!--<div class="form-group">-->
+                    <!--<label for="fromInput">From</label>-->
+                    <!--<input type="text" class="form-control fromInput" id="fromInput" placeholder="From" value="London, UK">-->
+                <!--</div>-->
+                <!--<div class="form-group">-->
+                    <!--<label for="toInput">To</label>-->
+                    <!--<input type="text" class="form-control" id="toInput" placeholder="To" value="Paris, France">-->
+                <!--</div>-->
+                <!--<button id="routeSearchBtn">Search</button>-->
+            <!--</form>-->
+
+        <!--</div>-->
+
+
+    <!--</div>-->
 
     <div class="route-container">
         <div class="itinery-list" id="route-list-from-api">
             {{>routeList}}
         </div>
     </div>
+    </main>
+        </div>
+
 </template>

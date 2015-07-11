@@ -1,16 +1,23 @@
-<template name="aboutProject">
-    {{> headerBar}}
-    <div class="container">
-        <h2>About</h2>
-        <div>
-            This is a personal project to learn about Meteor. Eventually I am hoping this app will let you search
-            for routes from A to B, let you save route(s) to your user account, as well as a calendar function so
-            you can plan your trip.
+<template name="aboutProject" xmlns="http://www.w3.org/1999/html">
+    <div class="layout-transparent mdl-layout mdl-js-layout">
+    {{> headerBarMDL}}
+        <main class="mdl-layout__content">
+        <div class="mdl-card mdl-cell mdl-cell--9-col-desktop mdl-cell--6-col-tablet mdl-cell--4-col-phone">
+            <section class="section--center mdl-grid mdl-grid--no-spacing mdl-shadow--2dp">
+            <div class="mdl-card__title">
+                <h4 class="mdl-card__title-text">About</h4>
+            </div>
+            <div class="mdl-card__supporting-text">
+                This is a personal project to learn about Meteor. Eventually I am hoping this app will let you search
+                for routes from A to B, let you save route(s) to your user account, as well as a calendar function so
+                you can plan your trip.
 
-            Thanks to the guys at Rome2Rio for the great free api! Give them a visit at rome2rio.com
+                Thanks to the guys at Rome2Rio for the great free api! Give them a visit at rome2rio.com
+            </div>
+            </section>
         </div>
+        </main>
     </div>
-
 </template>
 
 <template name="headerBar">
@@ -39,11 +46,11 @@
 </template>
 
 <template name="headerBarMDL">
-    <div class="layout-transparent mdl-layout mdl-js-layout">
+
         <header class="mdl-layout__header mdl-layout__header--transparent">
             <div class="mdl-layout__header-row">
                 <!-- Title -->
-                <span class="mdl-layout-title">Title</span>
+                <span class="mdl-layout-title"><a href="/">Round the World</a></span>
                 <!-- Add spacer, to align navigation to the right -->
                 <div class="mdl-layout-spacer"></div>
                 <!-- Navigation -->
@@ -55,5 +62,5 @@
                 </nav>
             </div>
         </header>
-    </div>
+    <!--</div>-->
 </template>

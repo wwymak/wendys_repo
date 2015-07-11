@@ -27,6 +27,7 @@ Template.body.helpers({
 
 Template.body.events({
     'blur #fromInput': function(event){
+        console.log("from input blir")
         queryForRoutes();
         //console.log($("#fromInput").val());
         //var fromDest = $("#fromInput").val();
@@ -51,6 +52,7 @@ Template.body.events({
 
 Template.home.events({
     'blur #fromInput': function(event){
+        console.log("from input blir")
         queryForRoutes();
         //console.log($("#fromInput").val());
         //var fromDest = $("#fromInput").val();

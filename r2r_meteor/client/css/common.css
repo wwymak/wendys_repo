@@ -92,7 +92,13 @@
 .icon-bus {
   background: url('imgs/flat-travel-and-vacation-icon-set.png') no-repeat -419px -1077px;
 }
-.layout-transparent .mdl-layout__header {
+.mdl-layout__header {
   color: white;
   background: url('/assets/travelling.jpg') center / cover;
+}
+.section--center {
+  max-width: 600px;
+}
+.title-general {
+  width: 100%;
 }
